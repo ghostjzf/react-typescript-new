@@ -14,7 +14,7 @@ console.log(chalk.cyan("正在启动环境..."));
 module.exports = {
   mode: "development",
   devtool: "inline-source-map",
-  entry: path.resolve(__dirname, "../src/index.js"),
+  entry: path.resolve(__dirname, "../src/index.tsx"),
   output: {
     filename: "static/js/[name].[hash:8].js",
     chunkFilename: "static/js/[name].[hash:8].js",
@@ -24,27 +24,10 @@ module.exports = {
     rules: [
       // Disable require.ensure as it's not a standard language feature.
       { parser: { requireEnsure: false } },
-
-      // First, run the linter.
-      // It's important to do this before Babel processes the JS.
-      {
-        test: /\.(js|mjs|jsx)$/,
-        enforce: "pre",
-        use: [
-          {
-            options: {
-              formatter: require.resolve("react-dev-utils/eslintFormatter"),
-              eslintPath: require.resolve("eslint")
-            },
-            loader: require.resolve("eslint-loader")
-          }
-        ],
-        include: path.resolve(__dirname, "../src")
-      },
       {
         test: /\.(js|mjs|jsx|ts|tsx)$/,
         include: path.resolve(__dirname, "../src"),
-        use: "babel-loader"
+        use: ["babel-loader", "ts-loader"]
       },
       {
         test: /\.css$/,
@@ -86,7 +69,7 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, "dist"),
-    open: true,
+    open: false,
     hot: true,
     compress: true,
     port: 9000,
@@ -95,7 +78,7 @@ module.exports = {
   },
   resolve: {
     alias: alias,
-    extensions: [".wasm", ".mjs", ".js", ".jsx", ".json"]
+    extensions: [".wasm", ".mjs", ".ts", ".tsx", ".js", ".jsx", ".json"]
   },
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
