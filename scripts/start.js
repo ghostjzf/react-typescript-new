@@ -3,11 +3,14 @@ process.on("unhandledRejection", err => {
 });
 
 const webpack = require("webpack");
+const resolve = require("resolve");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const chalk = require("react-dev-utils/chalk");
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
-const { alias } = require("./config/path.js");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin-alt");
+const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
+const paths = require("./config/path.js");
 
 console.log(chalk.cyan("正在启动环境..."));
 
@@ -77,7 +80,7 @@ module.exports = {
     overlay: true // 编译出现错误时，将错误直接显示在页面上
   },
   resolve: {
-    alias: alias,
+    alias: paths.alias,
     extensions: [".wasm", ".mjs", ".ts", ".tsx", ".js", ".jsx", ".json"]
   },
   // Some libraries import Node modules but don't use them in the browser.
@@ -106,6 +109,34 @@ module.exports = {
       onErrors: null,
       clearConsole: true
     }),
-    new webpack.HotModuleReplacementPlugin()
-  ]
+    new webpack.HotModuleReplacementPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: resolve.sync("typescript", {
+        basedir: paths.appNodeModules
+      }),
+      async: false,
+      checkSyntacticErrors: true,
+      tsconfig: paths.appTsConfig,
+      compilerOptions: {
+        module: "esnext",
+        moduleResolution: "node",
+        resolveJsonModule: true,
+        isolatedModules: true,
+        noEmit: true,
+        jsx: "preserve"
+      },
+      reportFiles: [
+        "**",
+        "!**/*.json",
+        "!**/__tests__/**",
+        "!**/?(*.)(spec|test).*",
+        "!**/src/setupProxy.*",
+        "!**/src/setupTests.*"
+      ],
+      watch: paths.appSrc,
+      silent: true,
+      formatter: typescriptFormatter
+    })
+  ],
+  performance: false
 };

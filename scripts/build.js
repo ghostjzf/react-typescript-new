@@ -3,6 +3,7 @@ process.on("unhandledRejection", err => {
 });
 
 const webpack = require("webpack");
+const resolve = require("resolve");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const chalk = require("react-dev-utils/chalk");
@@ -10,7 +11,9 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const { alias } = require("./config/path.js");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin-alt");
+const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
+const paths = require("./config/path.js");
 
 console.log(chalk.cyan("正在打包..."));
 
@@ -19,7 +22,7 @@ module.exports = {
   devtool: "source-map",
   entry: {
     vendor: ["react", "react-dom"],
-    path: path.resolve(__dirname, "../src/index.js")
+    path: path.resolve(__dirname, "../src/index.tsx")
   },
   output: {
     filename: "static/js/[name].[contenthash].js",
@@ -28,10 +31,11 @@ module.exports = {
   },
   module: {
     rules: [
+      { parser: { requireEnsure: false } },
       {
         test: /\.(js|mjs|jsx|ts|tsx)$/,
         include: path.resolve(__dirname, "../src"),
-        use: "babel-loader"
+        use: ["babel-loader", "ts-loader"]
       },
       {
         test: /\.css$/,
@@ -72,8 +76,8 @@ module.exports = {
     ]
   },
   resolve: {
-    alias: alias,
-    extensions: [".wasm", ".mjs", ".js", ".jsx", ".json"]
+    alias: paths.alias,
+    extensions: [".wasm", ".mjs", ".tsx", ".ts", ".js", ".jsx", ".json"]
   },
   optimization: {
     minimizer: [
@@ -136,6 +140,34 @@ module.exports = {
       title: "Hello React",
       template: path.resolve(__dirname, "../public/index.html")
     }),
-    new webpack.HashedModuleIdsPlugin()
-  ]
+    new webpack.HashedModuleIdsPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: resolve.sync("typescript", {
+        basedir: paths.appNodeModules
+      }),
+      async: false,
+      checkSyntacticErrors: true,
+      tsconfig: paths.appTsConfig,
+      compilerOptions: {
+        module: "esnext",
+        moduleResolution: "node",
+        resolveJsonModule: true,
+        isolatedModules: true,
+        noEmit: true,
+        jsx: "preserve"
+      },
+      reportFiles: [
+        "**",
+        "!**/*.json",
+        "!**/__tests__/**",
+        "!**/?(*.)(spec|test).*",
+        "!**/src/setupProxy.*",
+        "!**/src/setupTests.*"
+      ],
+      watch: paths.appSrc,
+      silent: true,
+      formatter: typescriptFormatter
+    })
+  ],
+  performance: false
 };
