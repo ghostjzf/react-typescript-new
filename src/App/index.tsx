@@ -2,11 +2,7 @@ import React, { Component } from "react";
 import withLayout from "../utils/withLayout";
 import "./style.scss";
 
-interface IProps {
-  a?: number;
-}
-
-class App extends Component<IProps> {
+class App extends Component {
   render() {
     return (
       <div className="app">
