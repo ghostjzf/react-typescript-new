@@ -17,7 +17,10 @@ console.log(chalk.cyan("正在启动环境..."));
 module.exports = {
   mode: "development",
   devtool: "inline-source-map",
-  entry: path.resolve(__dirname, "../src/index.tsx"),
+  entry: {
+    vendor: ["react", "react-dom", "react-router-dom", "mobx", "mobx-react"],
+    path: path.resolve(__dirname, "../src/index.tsx")
+  },
   output: {
     filename: "static/js/[name].[hash:8].js",
     chunkFilename: "static/js/[name].[hash:8].js",
