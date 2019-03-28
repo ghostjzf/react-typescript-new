@@ -24,7 +24,7 @@ module.exports = {
   output: {
     filename: "static/js/[name].[hash:8].js",
     chunkFilename: "static/js/[name].[hash:8].js",
-    path: path.resolve(__dirname, "../dist")
+    path: paths.appDist
   },
   module: {
     rules: [
@@ -32,25 +32,22 @@ module.exports = {
       { parser: { requireEnsure: false } },
       {
         test: /\.(js|mjs|jsx|ts|tsx)$/,
-        include: path.resolve(__dirname, "../src"),
+        include: paths.appSrc,
         use: ["babel-loader", "ts-loader"]
       },
       {
         test: /\.css$/,
-        include: [
-          path.resolve(__dirname, "../src"),
-          path.resolve(__dirname, "../node_modules/antd/es/")
-        ],
+        include: [paths.appSrc, `${paths.appSrc}/antd/es/`],
         use: ["style-loader", "css-loader"]
       },
       {
         test: /\.s[ac]ss$/,
-        include: path.resolve(__dirname, "../src"),
+        include: paths.appSrc,
         use: ["style-loader", "css-loader", "sass-loader"]
       },
       {
         test: /\.(txt|htm)$/,
-        include: path.resolve(__dirname, "../src"),
+        include: paths.appSrc,
         loader: "raw-loader"
       },
       {
@@ -84,7 +81,7 @@ module.exports = {
   },
   resolve: {
     alias: paths.alias,
-    extensions: [".wasm", ".mjs", ".ts", ".tsx", ".js", ".jsx", ".json"]
+    extensions: [".wasm", ".mjs", ".ts", ".tsx", ".js", ".json"]
   },
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

@@ -39,6 +39,27 @@
       "./scripts/config/eslintrc.js"
     ]
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "{src,static}/**/*.{js,jsx,mjs}": [
+      "node_modules/.bin/eslint --fix",
+      "node_modules/.bin/prettier --write",
+      "git add"
+    ],
+    "{src,static}/**/*.{ts,tsx}": [
+      "node_modules/.bin/tslint --fix",
+      "node_modules/.bin/prettier --write",
+      "git add"
+    ],
+    "{src,static}/**/*.{css,scss,less,json}": [
+      "node_modules/.bin/prettier --write",
+      "git add"
+    ]
+  },
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-decorators": "^7.3.0",
@@ -63,6 +84,7 @@
     "fork-ts-checker-webpack-plugin-alt": "^0.4.14",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "html-webpack-plugin": "^3.2.0",
+    "husky": "^1.3.1",
     "mini-css-extract-plugin": "^0.5.0",
     "node-notifier": "^5.4.0",
     "node-sass": "^4.11.0",
@@ -80,8 +102,9 @@
     "webpack-dev-server": "^3.2.1"
   },
   "dependencies": {
-    "antd": "^3.14.1",
+    "antd": "^3.15.2",
     "axios": "^0.18.0",
+    "lint-staged": "^8.1.5",
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
     "moment": "^2.24.0",
