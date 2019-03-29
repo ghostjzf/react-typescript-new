@@ -31,9 +31,14 @@ module.exports = {
       // Disable require.ensure as it's not a standard language feature.
       { parser: { requireEnsure: false } },
       {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "babel-loader"
+      },
+      {
+        test: /\.tsx?$/,
         include: paths.appSrc,
-        use: ["babel-loader", "ts-loader"]
+        loader: "ts-loader"
       },
       {
         test: /\.css$/,
