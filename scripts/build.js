@@ -19,7 +19,7 @@ console.log(chalk.cyan("正在打包..."));
 
 module.exports = {
   mode: "production",
-  devtool: "source-map",
+  devtool: "hidden-source-map",
   entry: {
     vendor: ["react", "react-dom", "react-router-dom", "mobx", "mobx-react"],
     path: path.resolve(__dirname, "../src/index.tsx")
