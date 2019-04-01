@@ -141,6 +141,9 @@
       "git add"
     ]
   },
+  "stylelint": {
+    "extends": "stylelint-config-recommended"
+  },
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-decorators": "^7.3.0",
@@ -177,6 +180,7 @@
     "resolve": "^1.10.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
+    "stylelint-config-recommended": "^2.1.0",
     "ts-loader": "^5.3.3",
     "typescript": "^3.3.3333",
     "uglifyjs-webpack-plugin": "^2.1.2",
@@ -191,8 +195,8 @@
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
     "moment": "^2.24.0",
-    "react": "^16.8.3",
-    "react-dom": "^16.8.3",
+    "react": "^16.8.5",
+    "react-dom": "^16.8.5",
     "react-router-dom": "^4.3.1"
   }
 }
