@@ -34,7 +34,8 @@ module.exports = {
       { parser: { requireEnsure: false } },
       {
         enforce: "pre",
-        test: /\.js$/,
+        test: /\.jsx?$/,
+        include: paths.appSrc,
         loader: "babel-loader"
       },
       {

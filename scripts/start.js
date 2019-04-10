@@ -33,6 +33,7 @@ module.exports = {
       {
         enforce: "pre",
         test: /\.jsx?$/,
+        include: paths.appSrc,
         loader: "babel-loader"
       },
       {
