@@ -32,7 +32,7 @@ module.exports = {
       { parser: { requireEnsure: false } },
       {
         enforce: "pre",
-        test: /\.js$/,
+        test: /\.jsx?$/,
         loader: "babel-loader"
       },
       {
