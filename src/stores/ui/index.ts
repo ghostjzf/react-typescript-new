@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, action } from "mobx";
 
 class UI {
   @observable
@@ -6,6 +6,12 @@ class UI {
 
   @observable
   title = "BOS 2.0";
+
+  @action
+  setTitle(title) {
+    this.title = title;
+    document.title = title + " - " + this.siteName;
+  }
 }
 
 export default new UI();

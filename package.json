@@ -156,6 +156,7 @@
     "@types/node": "^11.11.0",
     "@types/react": "^16.8.7",
     "@types/react-dom": "^16.8.2",
+    "@types/react-router-dom": "^4.3.2",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
     "babel-plugin-import": "^1.11.0",
@@ -203,8 +204,11 @@
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
     "moment": "^2.24.0",
+    "raf-dom": "^1.1.0",
     "react": "^16.8.5",
+    "react-awesome-snippets": "^0.0.22",
     "react-dom": "^16.8.5",
-    "react-router-dom": "^4.3.1"
+    "react-router-dom": "^4.3.1",
+    "react-transition-group": "^4.0.0"
   }
 }

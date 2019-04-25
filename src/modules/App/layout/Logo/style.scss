@@ -1,0 +1,14 @@
+.app-brand-root {
+  margin-right: 30px;
+  .app-logo {
+    background: url(./logo.png) no-repeat 0 center / 36px;
+    display: flex;
+    align-items: center;
+    padding-left: 43px;
+    color: #000;
+
+    .anticon {
+      margin-left: 5px;
+    }
+  }
+}
