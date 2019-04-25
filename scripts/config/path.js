@@ -4,14 +4,15 @@ const path = require("path");
 const appDirectory = fs.realpathSync(process.cwd());
 
 function resolveApp(relativePath) {
-  return path.resolve(appDirectory, relativePath);
+    return path.resolve(appDirectory, relativePath);
 }
 
 const alias = {
-  components: resolveApp("src/components"),
-  utils: resolveApp("src/utils"),
-  stores: resolveApp("src/stores"),
-  public: resolveApp("public")
+    components: resolveApp("src/components"),
+    utils: resolveApp("src/utils"),
+    stores: resolveApp("src/stores"),
+    public: resolveApp("public"),
+    modules: resolveApp("src/modules")
 };
 
 // module.exports = {
@@ -33,9 +34,9 @@ const alias = {
 // };
 
 module.exports = {
-  alias: alias,
-  appSrc: resolveApp("src"),
-  appTsConfig: resolveApp("tsconfig.json"),
-  appNodeModules: resolveApp("node_modules"),
-  appDist: resolveApp("dist")
+    alias: alias,
+    appSrc: resolveApp("src"),
+    appTsConfig: resolveApp("tsconfig.json"),
+    appNodeModules: resolveApp("node_modules"),
+    appDist: resolveApp("dist")
 };
