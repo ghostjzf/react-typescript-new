@@ -1,0 +1,16 @@
+.site-error {
+  margin: 30px auto;
+  max-width: 800px;
+  text-align: center;
+  .anticon {
+    font-size: 40px;
+    color: #faad14;
+  }
+  .error-title {
+    margin-top: 8px;
+  }
+  .error-msg {
+    margin: 8px 0;
+    font-size: 13px;
+  }
+}
