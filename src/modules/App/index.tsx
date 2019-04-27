@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Provider, observer } from "mobx-react";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import App from "./App";
 import UI from "stores/ui";
 import Security from "stores/security";
@@ -14,9 +14,9 @@ class Root extends Component {
     return (
       <div className="app">
         <Provider {...stores}>
-          <BrowserRouter>
+          <HashRouter>
             <App />
-          </BrowserRouter>
+          </HashRouter>
         </Provider>
       </div>
     );

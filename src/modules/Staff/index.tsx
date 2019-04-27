@@ -1,9 +1,4 @@
-import React, { Component } from "react";
+import createModule from "utils/createModule";
+import { config } from "./config";
 
-class Staff extends Component {
-  render() {
-    return <div>Staff Module</div>;
-  }
-}
-
-export default Staff;
+export default createModule(config, "staff", () => import("./Pages"));

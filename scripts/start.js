@@ -100,6 +100,7 @@ module.exports = {
         compress: true,
         port: 9000,
         quiet: true,
+        historyApiFallback: true,
         overlay: true // 编译出现错误时，将错误直接显示在页面上
     },
     resolve: {

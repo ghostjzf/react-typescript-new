@@ -1,23 +1,20 @@
 body {
   background-color: #f8f8f8;
-  // padding-top: 60px;
+  min-width: 1000px;
 }
 
-.app {
+.app-layout-root {
+  min-height: 100vh;
+}
+.app-footer {
   text-align: center;
-
-  .logo {
-    width: 25vw;
-    animation: rotateAnimation 5s linear 0.5s infinite;
-  }
+  font-size: 12px;
+  color: #888;
+  padding: 12px 0;
 }
-
-@keyframes rotateAnimation {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-
-  to {
-    -webkit-transform: rotate(360deg);
-  }
+.app-content {
+  padding: 12px;
+  background-color: #fff;
+  margin: 0 8px;
+  overflow-y: auto;
 }

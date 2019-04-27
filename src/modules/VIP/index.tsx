@@ -1,9 +1,4 @@
-import React, { Component } from "react";
+import createModule from "utils/createModule";
+import { config } from "./config";
 
-class Vip extends Component {
-  render() {
-    return <div>Vip Module</div>;
-  }
-}
-
-export default Vip;
+export default createModule(config, "vip", () => import("./Pages"));

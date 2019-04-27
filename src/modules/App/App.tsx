@@ -7,13 +7,14 @@ import {
 } from "react-router-dom";
 import { Layout } from "antd";
 import Header from "./layout/Header";
+// import Sider from "./layout/Sider";
 import Time from "./layout/Time";
 import ErrorBox from "components/ErrorBox";
+
 import VIP from "modules/VIP";
 import Staff from "modules/Staff";
 
-const { Footer, Sider, Content } = Layout;
-
+const { Footer } = Layout;
 const curYear = new Date().getFullYear();
 
 class App extends Component<RouteComponentProps> {
@@ -31,24 +32,23 @@ class App extends Component<RouteComponentProps> {
 
     return (
       <Switch>
-        <Route path="/:module(am)" component={VIP} />
-        <Route path="/:module(om)" component={Staff} />
+        <Route path="/:module(vip)" component={VIP} />
+        <Route path="/:module(staff)" component={Staff} />
       </Switch>
     );
   }
 
   render() {
     return (
-      <div>
+      <Layout className="app-layout-root">
         <Header />
-        <Sider>111</Sider>
-        <Content>{}</Content>
+        {this.renderRoutes()}
         <Footer className="app-footer">
           <Time />
           <br />
           ©React Production {curYear}, Created by Jiangzhifeng.
         </Footer>
-      </div>
+      </Layout>
     );
   }
 }

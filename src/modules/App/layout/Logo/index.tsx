@@ -9,7 +9,7 @@ class Logo extends Component {
     return (
       <div className="app-brand-root">
         <Link to="/" className="app-logo">
-          BOS 2.0
+          System Name At Here
         </Link>
       </div>
     );
