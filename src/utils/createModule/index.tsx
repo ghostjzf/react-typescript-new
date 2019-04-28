@@ -2,7 +2,6 @@ import React from "react";
 import { Layout } from "antd";
 import { Switch, Route, Redirect, RouteComponentProps } from "react-router-dom";
 import Sider from "./Sider";
-import Menus from "stores/menus";
 
 const { Content } = Layout;
 
@@ -53,9 +52,6 @@ function createModule(config, moduleId, loader): React.ComponentClass {
     } as IState;
 
     public componentDidMount() {
-      Menus.menus = config;
-      Menus.moduleId = moduleId;
-
       if (!this.state.routes) {
         this.tryLoad();
       }

@@ -1,13 +1,3 @@
-import { observable } from "mobx";
-
-class Menus {
-  @observable menus = [];
-
-  @observable moduleId: any = null;
-}
-
-export default new Menus();
-
 export const modulePages = [
   {
     path: "/vip",
