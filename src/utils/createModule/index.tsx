@@ -86,8 +86,6 @@ function createModule(config, moduleId, loader): React.ComponentClass {
       const { routes, loading } = this.state;
       const { url } = this.props.match;
 
-      console.log(url);
-
       if (loading) {
         return "loading...";
       }
@@ -95,7 +93,7 @@ function createModule(config, moduleId, loader): React.ComponentClass {
       return (
         <Layout>
           <Sider menus={config} parentPath={this.props.match.url} />
-          <Content>
+          <Content className="app-content">
             <Switch>
               {routes.map(item => {
                 return (

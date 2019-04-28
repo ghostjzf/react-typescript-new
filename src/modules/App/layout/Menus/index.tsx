@@ -4,10 +4,6 @@ import { withRouter, RouteComponentProps, NavLink } from "react-router-dom";
 import { modulePages } from "stores/menus";
 
 class Menus extends Component<RouteComponentProps> {
-  onNavigateTab = ev => {
-    this.props.history.push(ev.key);
-  };
-
   getSelectKeys = () => {
     const keys = this.props.location.pathname.split("/")[1];
 
@@ -16,11 +12,7 @@ class Menus extends Component<RouteComponentProps> {
 
   render() {
     return (
-      <Menu
-        mode="horizontal"
-        onClick={this.onNavigateTab}
-        selectedKeys={[this.getSelectKeys()]}
-      >
+      <Menu mode="horizontal" selectedKeys={[this.getSelectKeys()]}>
         {modulePages.map(item => {
           return (
             <Menu.Item key={item.path}>
