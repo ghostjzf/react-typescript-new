@@ -42,11 +42,11 @@ module.exports = {
             {
                 enforce: "pre",
                 exclude: paths.appNodeModules,
-                test: /\.js$/,
+                test: /\.jsx?$/,
                 loader: "babel-loader"
             },
             {
-                test: /\.tsx?$/,
+                test: /\.(js|jsx|ts|tsx)$/,
                 include: paths.appSrc,
                 loader: ["babel-loader", "ts-loader"]
             },
