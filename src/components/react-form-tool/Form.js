@@ -20,6 +20,7 @@ class Form extends Component {
     }
 
     if (utils.isFunction(children)) {
+      console.log(111);
       return children($formutil);
     }
 

@@ -1,12 +1,12 @@
 export const modulePages = [
   {
-    path: "/vip",
-    title: "会员管理",
+    path: "/example",
+    title: "常用工具使用示例",
     permission: null
   },
   {
     path: "/staff",
-    title: "员工管理",
+    title: "Form Util示例",
     permission: null
   }
 ];

@@ -40,15 +40,19 @@ class Field extends Component {
     };
 
     return (
-      <FormContext.Consumer>
-        {context => {
-          context.$params = Object.assign(context.$params, {
-            [this.props.name]: this.state.value
-          });
+      <div className={"field-inline"}>
+        <FormContext.Consumer>
+          {context => {
+            if (this.state.value) {
+              context.$params = Object.assign(context.$params, {
+                [this.props.name]: this.state.value
+              });
+            }
 
-          return this.renderField($fieldutil, this.props);
-        }}
-      </FormContext.Consumer>
+            return this.renderField($fieldutil, this.props);
+          }}
+        </FormContext.Consumer>
+      </div>
     );
   }
 }

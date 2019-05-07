@@ -1,36 +1,47 @@
 import React, { Component } from "react";
-import { Form, Field } from "components/react-form-tool";
+import { Field } from "components/react-form-tool";
 import { Input, Button } from "antd";
+import withForm from "components/react-form-tool/withForm";
+
+// @ts-ignore
+@withForm
 class TestA extends Component {
   onChange(ev) {
     console.log(ev.target.value);
   }
 
   onSubmit = ev => {
+    console.log((this.props as any).$formutil);
     console.log(ev);
   };
 
   render() {
     return (
-      <Form>
-        {$formutil => {
-          console.log($formutil, 111);
+      <div>
+        {/* {$formutil => {
+                    console.log($formutil, 111);
 
-          return (
-            <>
-              <Field name="age" onChange={this.onChange}>
-                <Input />
-              </Field>
-              <Field name="name" onChange={this.onChange}>
-                <Input />
-              </Field>
-              <Button type="primary" onClick={this.onSubmit}>
-                submit
-              </Button>
-            </>
-          );
-        }}
-      </Form>
+                    const onSubmit = () => {
+                        console.log((this.props as any).$formutil);
+                        console.log("1111111111111111111");
+                        console.log($formutil);
+                    };
+
+                    return ( */}
+        <>
+          <Field name="age" onChange={this.onChange}>
+            <Input />
+          </Field>
+          <Field name="name" onChange={this.onChange}>
+            <Input />
+          </Field>
+          <Button type="primary" onClick={this.onSubmit}>
+            submit
+          </Button>
+        </>
+        {/* );
+                }} */}
+      </div>
     );
   }
 }

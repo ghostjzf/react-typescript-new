@@ -1,14 +1,14 @@
 export const config = [
   {
-    path: "/a",
-    title: "test a",
+    path: "/form-tool",
+    title: "Form Tool",
     exact: true,
     permission: null,
     component: "TestA"
   },
   {
-    path: "/b",
-    title: "test b",
+    path: "/component",
+    title: "常用组件",
     exact: true,
     permission: null,
     component: "TestB"

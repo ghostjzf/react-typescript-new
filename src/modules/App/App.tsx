@@ -32,7 +32,7 @@ class App extends Component<RouteComponentProps> {
 
     return (
       <Switch>
-        <Route path="/:module(vip)" component={VIP} />
+        <Route path="/:module(example)" component={VIP} />
         <Route path="/:module(staff)" component={Staff} />
       </Switch>
     );
