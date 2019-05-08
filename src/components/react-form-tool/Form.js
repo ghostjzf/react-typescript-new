@@ -4,7 +4,8 @@ import * as utils from "./utils";
 
 class Form extends Component {
   $formutil = {
-    $params: {}
+    $params: {},
+    layout: this.props.layout || "vertical"
   };
 
   _render() {
@@ -20,7 +21,6 @@ class Form extends Component {
     }
 
     if (utils.isFunction(children)) {
-      console.log(111);
       return children($formutil);
     }
 
@@ -34,6 +34,7 @@ class Form extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <FormContext.Provider value={this.$formutil}>
         {this._render()}

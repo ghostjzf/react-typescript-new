@@ -1,47 +1,37 @@
 import React, { Component } from "react";
-import { Field } from "components/react-form-tool";
+import { Form, Field, FormItem } from "components/react-form-tool";
 import { Input, Button } from "antd";
-import withForm from "components/react-form-tool/withForm";
 
-// @ts-ignore
-@withForm
 class TestA extends Component {
   onChange(ev) {
     console.log(ev.target.value);
   }
 
-  onSubmit = ev => {
-    console.log((this.props as any).$formutil);
-    console.log(ev);
-  };
-
   render() {
     return (
-      <div>
-        {/* {$formutil => {
-                    console.log($formutil, 111);
+      <Form layout="vertical">
+        {$formutil => {
+          const onSubmit = () => {
+            console.log($formutil);
+          };
 
-                    const onSubmit = () => {
-                        console.log((this.props as any).$formutil);
-                        console.log("1111111111111111111");
-                        console.log($formutil);
-                    };
-
-                    return ( */}
-        <>
-          <Field name="age" onChange={this.onChange}>
-            <Input />
-          </Field>
-          <Field name="name" onChange={this.onChange}>
-            <Input />
-          </Field>
-          <Button type="primary" onClick={this.onSubmit}>
-            submit
-          </Button>
-        </>
-        {/* );
-                }} */}
-      </div>
+          return (
+            <>
+              <h3>使用Field</h3>
+              <Field name="age" onChange={this.onChange}>
+                <Input />
+              </Field>
+              <h3>使用FormItem</h3>
+              <FormItem name="name" label="" onChange={this.onChange}>
+                <Input />
+              </FormItem>
+              <Button type="primary" onClick={onSubmit}>
+                submit
+              </Button>
+            </>
+          );
+        }}
+      </Form>
     );
   }
 }

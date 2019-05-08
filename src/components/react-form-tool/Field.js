@@ -40,19 +40,25 @@ class Field extends Component {
     };
 
     return (
-      <div className={"field-inline"}>
-        <FormContext.Consumer>
-          {context => {
-            if (this.state.value) {
-              context.$params = Object.assign(context.$params, {
-                [this.props.name]: this.state.value
-              });
-            }
+      <FormContext.Consumer>
+        {context => {
+          if (this.state.value) {
+            context.$params = Object.assign(context.$params, {
+              [this.props.name]: this.state.value
+            });
+          }
 
-            return this.renderField($fieldutil, this.props);
-          }}
-        </FormContext.Consumer>
-      </div>
+          return (
+            <div
+              className={
+                context.layout === "inline" ? "field-inline" : "field-block"
+              }
+            >
+              {this.renderField($fieldutil, this.props)}
+            </div>
+          );
+        }}
+      </FormContext.Consumer>
     );
   }
 }

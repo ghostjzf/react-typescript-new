@@ -3,3 +3,21 @@
   width: 200px;
   padding-right: 11px;
 }
+
+.field-block {
+  margin-bottom: 12px;
+  flex: 2;
+}
+
+.form-item {
+  width: 600px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.form-item-label {
+  flex: 1;
+  line-height: 32px;
+  text-align: right;
+  margin-right: 8px;
+}
