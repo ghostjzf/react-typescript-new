@@ -24,17 +24,16 @@ class Form extends Component {
       return children($formutil);
     }
 
-    return Children.map(children, child =>
-      child && utils.isFunction(child.type)
+    return Children.map(children, child => {
+      return child && utils.isFunction(child.type)
         ? cloneElement(child, {
             $formutil
           })
-        : child
-    );
+        : child;
+    });
   }
 
   render() {
-    console.log(this.props);
     return (
       <FormContext.Provider value={this.$formutil}>
         {this._render()}

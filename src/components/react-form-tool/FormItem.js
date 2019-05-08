@@ -1,18 +1,37 @@
 import React, { Component } from "react";
 import Field from "./Field";
+import FormContext from "./context";
 
 class FormItem extends Component {
   render() {
-    const { label } = this.props;
+    const { children, ...otherProps } = this.props;
     const pot = ":";
 
     return (
-      <div className="form-item">
-        <label className="form-item-label">
-          {label && label + (pot ? pot : "")}
-        </label>
-        <Field>{this.props.children}</Field>
-      </div>
+      <FormContext.Consumer>
+        {context => {
+          return (
+            <div
+              className={[
+                "form-item",
+                context.layout === "inline" ? "form-item-inline" : ""
+              ].join(" ")}
+            >
+              <label
+                className={[
+                  "form-item-label",
+                  context.layout === "inline" ? "form-item-label-block" : ""
+                ].join(" ")}
+              >
+                {otherProps.label &&
+                  otherProps.label +
+                    (pot && context.layout !== "inline" ? pot : "")}
+              </label>
+              <Field {...otherProps}>{this.props.children}</Field>
+            </div>
+          );
+        }}
+      </FormContext.Consumer>
     );
   }
 }

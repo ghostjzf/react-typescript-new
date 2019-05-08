@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Field, FormItem } from "components/react-form-tool";
+import { Form, FormItem } from "components/react-form-tool";
 import { Input, Button } from "antd";
 
 class TestA extends Component {
@@ -17,12 +17,17 @@ class TestA extends Component {
 
           return (
             <>
-              <h3>使用Field</h3>
-              <Field name="age" onChange={this.onChange}>
+              {/* <h3>使用FormItem</h3> */}
+              <FormItem name="name" label="姓名">
                 <Input />
-              </Field>
-              <h3>使用FormItem</h3>
-              <FormItem name="name" label="" onChange={this.onChange}>
+              </FormItem>
+              <FormItem name="height" label="身高">
+                <Input />
+              </FormItem>
+              <FormItem name="age" label="年龄">
+                <Input />
+              </FormItem>
+              <FormItem name="weight" label="体重">
                 <Input />
               </FormItem>
               <Button type="primary" onClick={onSubmit}>
