@@ -9,7 +9,7 @@ class TestA extends Component {
 
   render() {
     return (
-      <Form layout="vertical">
+      <Form layout="inline">
         {$formutil => {
           const onSubmit = () => {
             console.log($formutil);

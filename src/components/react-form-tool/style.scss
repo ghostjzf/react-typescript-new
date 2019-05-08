@@ -25,9 +25,12 @@
 .form-item-label-block {
   display: block;
   text-align: left;
+  line-height: 16px;
+  padding-bottom: 8px;
 }
 
 .form-item-inline {
   display: inline-block;
   width: auto;
+  margin-bottom: 12px;
 }
