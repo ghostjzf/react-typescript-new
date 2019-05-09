@@ -1,5 +1,6 @@
 import React, { Component, Children, cloneElement } from "react";
 import FormContext from "./context";
+import * as utils from "./utils";
 
 class Field extends Component {
   constructor(props) {
@@ -34,17 +35,33 @@ class Field extends Component {
   };
 
   render() {
-    const $fieldutil = {
-      name: this.props.name,
-      onChange: this.onChange.bind(this)
-    };
+    const { name, formatter, parser } = this.props;
+    const { value: FieldValue } = this.state;
+
+    const $fieldutil = Object.assign(
+      {
+        name: name,
+        onChange: this.onChange.bind(this)
+      },
+      {
+        value:
+          formatter && utils.isFunction(formatter)
+            ? formatter(FieldValue)
+            : FieldValue
+      }
+    );
 
     return (
       <FormContext.Consumer>
         {context => {
-          if (this.state.value) {
+          if (FieldValue && name) {
+            const value =
+              parser && utils.isFunction(parser)
+                ? parser(FieldValue)
+                : FieldValue;
+
             context.$params = Object.assign(context.$params, {
-              [this.props.name]: this.state.value
+              [this.props.name]: value
             });
           }
 
