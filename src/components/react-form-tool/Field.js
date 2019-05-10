@@ -10,15 +10,34 @@ class Field extends Component {
     };
   }
 
+  $formutil;
+
   onChange = ev => {
     ev.persist();
 
-    this.setState({
-      value: ev.target.value
-    });
+    const eventValue = ev.target.value;
+
+    this.setState({ value: eventValue });
 
     if (this.props.onChange) {
       this.props.onChange(ev);
+    }
+
+    const { name, formatter, parser } = this.props;
+
+    const FieldValue = name
+      ? formatter && utils.isFunction(formatter)
+        ? formatter(eventValue)
+        : eventValue
+      : eventValue;
+
+    const value =
+      parser && utils.isFunction(parser) ? parser(FieldValue) : FieldValue;
+
+    if (name) {
+      this.$formutil.$setParams({
+        [this.props.name]: value
+      });
     }
   };
 
@@ -34,43 +53,50 @@ class Field extends Component {
     );
   };
 
-  render() {
-    const { name, formatter, parser } = this.props;
-    const { value: FieldValue } = this.state;
+  getFieldValue = (value, props) => {
+    const { name, $defaultValue } = props;
+    const { $defaultValues } = this.$formutil;
 
-    const $fieldutil = Object.assign(
-      {
-        name: name,
-        onChange: this.onChange.bind(this)
-      },
-      {
-        value:
-          formatter && utils.isFunction(formatter)
-            ? formatter(FieldValue)
-            : FieldValue
-      }
-    );
+    return name
+      ? value || $defaultValue || ($defaultValues && $defaultValues[name]) || ""
+      : "";
+  };
+
+  componentDidMount() {
+    this.setState((oldValue, props) => {
+      return { value: this.getFieldValue(oldValue.value, props) };
+    });
+  }
+
+  render() {
+    const { name, formatter } = this.props;
 
     return (
       <FormContext.Consumer>
         {context => {
-          if (FieldValue && name) {
-            const value =
-              parser && utils.isFunction(parser)
-                ? parser(FieldValue)
-                : FieldValue;
+          this.$formutil = context;
 
-            context.$params = Object.assign(context.$params, {
-              [this.props.name]: value
-            });
-          }
+          const FieldValue = name
+            ? formatter && utils.isFunction(formatter)
+              ? formatter(context.$params[name])
+              : context.$params[name]
+            : this.state.value;
+
+          const $fieldutil = Object.assign(
+            {
+              name: name,
+              onChange: this.onChange.bind(this)
+            },
+            {
+              value:
+                formatter && utils.isFunction(formatter)
+                  ? formatter(FieldValue)
+                  : FieldValue
+            }
+          );
 
           return (
-            <div
-              className={
-                context.layout === "inline" ? "field-inline" : "field-block"
-              }
-            >
+            <div className={utils.getFieldClassName(context)}>
               {this.renderField($fieldutil, this.props)}
             </div>
           );

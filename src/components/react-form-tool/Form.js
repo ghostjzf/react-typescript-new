@@ -3,14 +3,30 @@ import FormContext from "./context";
 import * as utils from "./utils";
 
 class Form extends Component {
-  $formutil = {
-    $params: {},
-    $reset: () => {},
-    layout: this.props.layout || "vertical"
+  static defaultProps = {
+    $defaultValues: {},
+    $defaultStates: {}
   };
 
-  _render() {
-    const $formutil = this.$formutil;
+  state = {
+    $params: {}
+  };
+
+  $formutil;
+
+  $$reset = () => {
+    this.setState({
+      $params: Object.assign({}, this.props.$defaultValues)
+    });
+  };
+
+  $setParams = params => {
+    this.setState({
+      $params: Object.assign(this.state.$params, params)
+    });
+  };
+
+  _render($formutil) {
     let { children } = this.props;
 
     if (utils.isFunction(children)) {
@@ -26,10 +42,24 @@ class Form extends Component {
     });
   }
 
+  componentDidMount() {
+    this.setState({
+      $params: Object.assign({}, this.props.$defaultValues, this.state.$params)
+    });
+  }
+
   render() {
+    const $formutil = (this.$formutil = {
+      $params: this.state.$params,
+      $defaultValues: this.props.$defaultValues || {},
+      $reset: this.$$reset,
+      $setParams: this.$setParams,
+      layout: this.props.layout || "vertical"
+    });
+
     return (
-      <FormContext.Provider value={this.$formutil}>
-        {this._render()}
+      <FormContext.Provider value={$formutil}>
+        {this._render($formutil)}
       </FormContext.Provider>
     );
   }

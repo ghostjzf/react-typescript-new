@@ -9,14 +9,16 @@ class TestA extends Component {
 
   render() {
     return (
-      <Form>
+      <Form $defaultValues={{ name: 1 }}>
         {$formutil => {
           const onSubmit = () => {
             console.log($formutil);
           };
 
           const onReset = () => {
-            console.log(111);
+            $formutil.$reset();
+
+            console.log($formutil);
           };
 
           return (
@@ -27,18 +29,18 @@ class TestA extends Component {
                 name="name"
                 label="姓名"
                 labelLayout="inline"
-                parser={value => "result: " + value}
+                $defaultValue="555"
               >
                 <Input placeholder="请输入姓名" />
               </FormItem>
               <FormItem name="" label="身高">
-                <Input />
+                <Input placeholder="请输入身高" />
               </FormItem>
               <FormItem name="age" label="年龄">
-                <Input />
+                <Input placeholder="请输入年龄" />
               </FormItem>
               <FormItem name="weight" label="体重">
-                <Input />
+                <Input placeholder="请输入体重" />
               </FormItem>
               <Button type="primary" onClick={onSubmit}>
                 submit
