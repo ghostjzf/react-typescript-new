@@ -5,21 +5,28 @@
 }
 
 .field-block {
-  margin-bottom: 12px;
-  flex: 2;
+  // flex: 2;
+  display: inline-block;
+  width: 500px;
 }
 
 .form-item {
   width: 608px;
-  display: flex;
-  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+.form-item-inline {
+  display: inline-block;
+  width: auto;
+  margin-bottom: 12px;
 }
 
 .form-item-label {
-  flex: 1;
   line-height: 32px;
   text-align: right;
   margin-right: 8px;
+  display: inline-block;
+  width: 100px;
 }
 
 .form-item-label-block {
@@ -29,8 +36,19 @@
   padding-bottom: 8px;
 }
 
-.form-item-inline {
-  display: inline-block;
+.INLINE-form-item-label {
   width: auto;
-  margin-bottom: 12px;
+}
+
+.error-msg {
+  color: red;
+  margin-right: 8px;
+  line-height: 20px;
+  margin-left: 108px;
+}
+
+.error-msg-block {
+  color: red;
+  margin-right: 8px;
+  line-height: 20px;
 }

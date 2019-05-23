@@ -26,6 +26,8 @@ class Form extends Component {
     });
   };
 
+  $validators = () => {};
+
   _render($formutil) {
     let { children } = this.props;
 

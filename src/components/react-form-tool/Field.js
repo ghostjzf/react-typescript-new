@@ -34,6 +34,8 @@ class Field extends Component {
     const value =
       parser && utils.isFunction(parser) ? parser(FieldValue) : FieldValue;
 
+    this.props.valuePropName(value);
+
     if (name) {
       this.$formutil.$setParams({
         [this.props.name]: value

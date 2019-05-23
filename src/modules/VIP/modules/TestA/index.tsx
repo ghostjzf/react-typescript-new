@@ -9,7 +9,7 @@ class TestA extends Component {
 
   render() {
     return (
-      <Form $defaultValues={{ name: 1 }}>
+      <Form $defaultValues={{ name: 1 }} layout="vertical">
         {$formutil => {
           const onSubmit = () => {
             console.log($formutil);
@@ -17,19 +17,20 @@ class TestA extends Component {
 
           const onReset = () => {
             $formutil.$reset();
-
-            console.log($formutil);
           };
 
           return (
             <>
-              {/* <h3>使用FormItem</h3> */}
               <FormItem
                 className="name"
                 name="name"
                 label="姓名"
-                labelLayout="inline"
+                required
+                labelLayout="block"
                 $defaultValue="555"
+                $validators={{
+                  required: value => !!value || "不能为空"
+                }}
               >
                 <Input placeholder="请输入姓名" />
               </FormItem>
@@ -39,13 +40,13 @@ class TestA extends Component {
               <FormItem name="age" label="年龄">
                 <Input placeholder="请输入年龄" />
               </FormItem>
-              <FormItem name="weight" label="体重">
+              <FormItem name="weight" label="体重" labelLayout="block">
                 <Input placeholder="请输入体重" />
               </FormItem>
               <Button type="primary" onClick={onSubmit}>
                 submit
               </Button>
-              <Button type="primary" onClick={onReset}>
+              <Button type="danger" onClick={onReset}>
                 reset
               </Button>
             </>

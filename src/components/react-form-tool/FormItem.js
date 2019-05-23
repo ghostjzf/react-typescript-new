@@ -1,43 +1,70 @@
 import React, { Component } from "react";
 import Field from "./Field";
 import FormContext from "./context";
+import * as utils from "./utils";
 
 class FormItem extends Component {
   static defaultProps = {
-    labelLayout: "block"
+    labelLayout: "inline",
+    required: false
+  };
+
+  state = {
+    valuePropName: "",
+    hasEdit: false
+  };
+
+  setValue = value => {
+    console.log("setValue");
+    this.setState({ valuePropName: value, hasEdit: true });
   };
 
   render() {
-    const { children, labelLayout, className, ...otherProps } = this.props;
+    const { valuePropName, hasEdit } = this.state;
+    const {
+      children,
+      labelLayout,
+      className,
+      required,
+      $validators,
+      ...otherProps
+    } = this.props;
     const pot = ":";
+    const requiredValidate =
+      $validators && $validators.required ? $validators.required : false;
 
     return (
       <FormContext.Consumer>
         {context => {
           return (
-            <div
-              className={[
-                "form-item",
-                context.layout === "inline" ? "form-item-inline" : "",
-                className
-              ].join(" ")}
-            >
+            <div className={utils.getFormItemClassName(context, className)}>
               <label
-                className={[
-                  "form-item-label",
-                  context.layout === "inline" && labelLayout !== "inline"
-                    ? "form-item-label-block"
-                    : ""
-                ].join(" ")}
+                className={utils.getFormItemLaybelClassName(
+                  context,
+                  labelLayout
+                )}
               >
                 {otherProps.label &&
                   otherProps.label +
-                    (pot &&
-                    (context.layout !== "inline" || labelLayout === "inline")
+                    (pot && (labelLayout === "inline" || !labelLayout)
                       ? pot
                       : "")}
               </label>
-              <Field {...otherProps}>{this.props.children}</Field>
+              <Field valuePropName={this.setValue} {...otherProps}>
+                {this.props.children}
+              </Field>
+              {required && (
+                <div
+                  className={utils.getErrorMsgClassName(context, labelLayout)}
+                >
+                  {hasEdit &&
+                    typeof requiredValidate === "function" &&
+                    requiredValidate(valuePropName)}
+                  {hasEdit &&
+                    typeof requiredValidate === "string" &&
+                    requiredValidate}
+                </div>
+              )}
             </div>
           );
         }}
