@@ -3,7 +3,6 @@ export function isFunction(arg) {
 }
 
 export function getFormItemLaybelClassName(context, labelLayout) {
-  console.log(labelLayout);
   return [
     "form-item-label",
     context.layout === "inline"
