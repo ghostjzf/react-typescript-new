@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { hot } from "react-hot-loader";
 
 class Git extends Component {
   render() {
@@ -6,4 +7,4 @@ class Git extends Component {
   }
 }
 
-export default Git;
+export default hot(module)(Git);
