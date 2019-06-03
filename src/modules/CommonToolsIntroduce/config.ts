@@ -7,10 +7,10 @@ export const config = [
     component: "TestA"
   },
   {
-    path: "/component",
-    title: "常用组件",
+    path: "/git-skill",
+    title: "git的使用",
     exact: true,
     permission: null,
-    component: "TestB"
+    component: "Git"
   }
 ];

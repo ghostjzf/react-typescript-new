@@ -11,7 +11,7 @@ import Header from "./layout/Header";
 import Time from "./layout/Time";
 import ErrorBox from "components/ErrorBox";
 
-import VIP from "modules/VIP";
+import CommonToolsIntroduce from "modules/CommonToolsIntroduce";
 import Staff from "modules/Staff";
 
 const { Footer } = Layout;
@@ -32,7 +32,7 @@ class App extends Component<RouteComponentProps> {
 
     return (
       <Switch>
-        <Route path="/:module(example)" component={VIP} />
+        <Route path="/:module(example)" component={CommonToolsIntroduce} />
         <Route path="/:module(staff)" component={Staff} />
       </Switch>
     );
