@@ -10,51 +10,49 @@
 
 ```
 .
-├── LICENSE
-├── README.md
-├── dist
-├── global.d.ts
-├── package-lock.json
-├── package.json
+├── dist  打包后文件夹
 ├── public
-│   └── index.html
 ├── scripts
-│   ├── build.js
-│   ├── config
-│   │   ├── eslintrc.js
-│   │   ├── path.js
-│   │   └── tslintrc.json
-│   └── start.js
+│   └── config
 ├── src
 │   ├── components
-│   │   └── Title
-│   │       └── index.tsx
-│   ├── index.tsx
+│   │   ├── Echarts
+│   │   ├── ErrorBox
+│   │   ├── Loading
+│   │   ├── Modal
+│   │   ├── Portal
+│   │   ├── Title
+│   │   └── react-form-tool
 │   ├── modules
-│   │   └── App
-│   │       ├── App.tsx
-│   │       ├── index.tsx
-│   │       ├── layout
-│   │       │   └── Header
-│   │       │       └── index.tsx
-│   │       ├── modules
-│   │       │   ├── Home
-│   │       │   ├── Login
-│   │       │   │   └── index.tsx
-│   │       │   └── Test
-│   │       └── style.scss
+│   │   ├── App
+│   │   │   ├── layout
+│   │   │   │   ├── Header
+│   │   │   │   ├── Logo
+│   │   │   │   ├── Menus
+│   │   │   │   └── Time
+│   │   │   └── modules
+│   │   │       ├── Home
+│   │   │       ├── Login
+│   │   │       └── Test
+│   │   ├── CommonToolsIntroduce
+│   │   │   └── modules
+│   │   │       ├── Git
+│   │   │       └── TestA
+│   │   └── Staff
+│   │       └── modules
+│   │           ├── TestA
+│   │           └── TestB
 │   ├── stores
 │   │   ├── menus
-│   │   │   └── index.tsx
 │   │   ├── security
-│   │   │   └── index.ts
+│   │   ├── siteUI
 │   │   └── ui
-│   │       └── index.ts
 │   └── utils
+│       ├── asyncModule
+│       ├── classlist
+│       ├── createModule
+│       │   └── Sider
+│       ├── http
 │       └── withLayout
-│           └── index.tsx
-├── static
-├── tree.text
-├── tsconfig.json
-└── tslint.json
+└── static
 ```
