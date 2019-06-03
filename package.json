@@ -18,6 +18,7 @@
             "@babel/preset-env"
         ],
         "plugins": [
+            "react-hot-loader/babel",
             "transform-class-properties",
             [
                 "@babel/plugin-proposal-decorators",

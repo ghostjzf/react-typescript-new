@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { Layout } from "antd";
 import Header from "./layout/Header";
-// import Sider from "./layout/Sider";
 import Time from "./layout/Time";
 import ErrorBox from "components/ErrorBox";
 
