@@ -2,12 +2,13 @@
   display: inline-block;
   width: 200px;
   padding-right: 11px;
+  vertical-align: top;
 }
 
 .field-block {
-  // flex: 2;
   display: inline-block;
   width: 500px;
+  vertical-align: top;
 }
 
 .form-item {
@@ -19,6 +20,7 @@
   display: inline-block;
   width: auto;
   margin-bottom: 12px;
+  vertical-align: top;
 }
 
 .form-item-label {
@@ -44,7 +46,6 @@
   color: red;
   margin-right: 8px;
   line-height: 20px;
-  margin-left: 108px;
 }
 
 .error-msg-block {

@@ -50,21 +50,23 @@ class FormItem extends Component {
                       ? pot
                       : "")}
               </label>
-              <Field valuePropName={this.setValue} {...otherProps}>
-                {this.props.children}
-              </Field>
-              {required && (
-                <div
-                  className={utils.getErrorMsgClassName(context, labelLayout)}
-                >
-                  {hasEdit &&
-                    typeof requiredValidate === "function" &&
-                    requiredValidate(valuePropName)}
-                  {hasEdit &&
-                    typeof requiredValidate === "string" &&
-                    requiredValidate}
-                </div>
-              )}
+              <div className={utils.getFieldClassName(context)}>
+                <Field valuePropName={this.setValue} {...otherProps}>
+                  {this.props.children}
+                </Field>
+                {required && (
+                  <div
+                    className={utils.getErrorMsgClassName(context, labelLayout)}
+                  >
+                    {hasEdit &&
+                      typeof requiredValidate === "function" &&
+                      requiredValidate(valuePropName)}
+                    {hasEdit &&
+                      typeof requiredValidate === "string" &&
+                      requiredValidate}
+                  </div>
+                )}
+              </div>
             </div>
           );
         }}

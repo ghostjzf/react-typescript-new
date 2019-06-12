@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { Form, FormItem } from "components/react-form-tool";
 import { Input, Button } from "antd";
+import { hot } from "react-hot-loader";
 
+// @ts-ignore
+@hot(module)
 class TestA extends Component {
   onChange(ev) {
     console.log(ev.target.value);
@@ -9,7 +12,7 @@ class TestA extends Component {
 
   render() {
     return (
-      <Form $defaultValues={{ name: 1 }} layout="vertical">
+      <Form $defaultValues={{ name: 1 }} layout="inline">
         {$formutil => {
           const onSubmit = () => {
             console.log($formutil);
@@ -26,7 +29,6 @@ class TestA extends Component {
                 name="name"
                 label="姓名"
                 required
-                labelLayout="block"
                 $defaultValue="555"
                 $validators={{
                   required: value => !!value || "不能为空"
@@ -40,7 +42,7 @@ class TestA extends Component {
               <FormItem name="age" label="年龄">
                 <Input placeholder="请输入年龄" />
               </FormItem>
-              <FormItem name="weight" label="体重" labelLayout="block">
+              <FormItem name="weight" label="体重">
                 <Input placeholder="请输入体重" />
               </FormItem>
               <Button type="primary" onClick={onSubmit}>

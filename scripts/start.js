@@ -94,7 +94,7 @@ module.exports = {
         ]
     },
     devServer: {
-        contentBase: path.join(__dirname, "dist"),
+        contentBase: paths.appDist,
         open: false,
         hot: true,
         compress: true,
