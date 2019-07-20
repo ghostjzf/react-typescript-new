@@ -1,185 +1,191 @@
-process.on("unhandledRejection", err => {
-    throw err;
+'use strict';
+
+// Do this as the first thing so that any code reading it knows the right env.
+process.env.BABEL_ENV = 'production';
+process.env.NODE_ENV = 'production';
+
+// Makes the script crash on unhandled rejections instead of silently
+// ignoring them. In the future, promise rejections that are not handled will
+// terminate the Node.js process with a non-zero exit code.
+process.on('unhandledRejection', err => {
+  throw err;
 });
 
-process.env.NODE_ENV = "production";
-process.env.BABEL_ENV = "production";
+// Ensure environment variables are read.
+require('../config/env');
 
-const webpack = require("webpack");
-const resolve = require("resolve");
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const chalk = require("react-dev-utils/chalk");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin-alt");
-const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
-const paths = require("./config/path.js");
 
-console.log(chalk.cyan("正在打包..."));
+const path = require('path');
+const chalk = require('react-dev-utils/chalk');
+const fs = require('fs-extra');
+const webpack = require('webpack');
+const configFactory = require('../config/webpack.config');
+const paths = require('../config/paths');
+const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
+const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
+const printHostingInstructions = require('react-dev-utils/printHostingInstructions');
+const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
+const printBuildError = require('react-dev-utils/printBuildError');
 
-module.exports = {
-    mode: "production",
-    devtool: "hidden-source-map",
-    entry: {
-        vendor: [
-            "react",
-            "react-dom",
-            "react-router-dom",
-            "mobx",
-            "mobx-react"
-        ],
-        path: path.resolve(__dirname, "../src/index.tsx")
+const measureFileSizesBeforeBuild =
+  FileSizeReporter.measureFileSizesBeforeBuild;
+const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
+const useYarn = fs.existsSync(paths.yarnLockFile);
+
+// These sizes are pretty large. We'll warn for bundles exceeding them.
+const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
+const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
+
+const isInteractive = process.stdout.isTTY;
+
+// Warn and crash if required files are missing
+if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
+  process.exit(1);
+}
+
+// Generate configuration
+const config = configFactory('production');
+
+// We require that you explicitly set browsers and do not fall back to
+// browserslist defaults.
+const { checkBrowsers } = require('react-dev-utils/browsersHelper');
+checkBrowsers(paths.appPath, isInteractive)
+  .then(() => {
+    // First, read the current file sizes in build directory.
+    // This lets us display how much they changed later.
+    return measureFileSizesBeforeBuild(paths.appBuild);
+  })
+  .then(previousFileSizes => {
+    // Remove all content but keep the directory so that
+    // if you're in it, you don't end up in Trash
+    fs.emptyDirSync(paths.appBuild);
+    // Merge with the public folder
+    copyPublicFolder();
+    // Start the webpack build
+    return build(previousFileSizes);
+  })
+  .then(
+    ({ stats, previousFileSizes, warnings }) => {
+      if (warnings.length) {
+        console.log(chalk.yellow('Compiled with warnings.\n'));
+        console.log(warnings.join('\n\n'));
+        console.log(
+          '\nSearch for the ' +
+            chalk.underline(chalk.yellow('keywords')) +
+            ' to learn more about each warning.'
+        );
+        console.log(
+          'To ignore, add ' +
+            chalk.cyan('// eslint-disable-next-line') +
+            ' to the line before.\n'
+        );
+      } else {
+        console.log(chalk.green('Compiled successfully.\n'));
+      }
+
+      console.log('File sizes after gzip:\n');
+      printFileSizesAfterBuild(
+        stats,
+        previousFileSizes,
+        paths.appBuild,
+        WARN_AFTER_BUNDLE_GZIP_SIZE,
+        WARN_AFTER_CHUNK_GZIP_SIZE
+      );
+      console.log();
+
+      const appPackage = require(paths.appPackageJson);
+      const publicUrl = paths.publicUrl;
+      const publicPath = config.output.publicPath;
+      const buildFolder = path.relative(process.cwd(), paths.appBuild);
+      printHostingInstructions(
+        appPackage,
+        publicUrl,
+        publicPath,
+        buildFolder,
+        useYarn
+      );
     },
-    output: {
-        filename: "static/js/[name].[contenthash].js",
-        chunkFilename: "static/js/[name].[contenthash].js",
-        path: paths.appDist
-    },
-    module: {
-        rules: [
-            { parser: { requireEnsure: false } },
-            {
-                enforce: "pre",
-                test: /\.jsx?$/,
-                include: paths.appSrc,
-                loader: "babel-loader"
-            },
-            {
-                test: /\.tsx?$/,
-                include: paths.appSrc,
-                loader: "ts-loader"
-            },
-            {
-                test: /\.css$/,
-                include: [paths.appSrc, `${paths.appNodeModules}/antd/es/`],
-                use: [MiniCssExtractPlugin.loader, "css-loader"]
-            },
-            {
-                test: /\.s[ac]ss$/,
-                exclude: /\.module\.s[ac]ss$/,
-                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
-            },
-            {
-                test: /\.(txt|htm)$/,
-                include: paths.appSrc,
-                loader: "raw-loader"
-            },
-            {
-                test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-                loader: "file-loader",
-                options: {
-                    name: "static/images/[name].[hash:8].[ext]"
-                }
-            },
-            {
-                test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)$/,
-                loader: "file-loader",
-                options: {
-                    name: "static/media/[name].[hash:8].[ext]"
-                }
-            },
-            {
-                test: /\.(woff|woff2|eot|ttf|otf)$/,
-                use: ["file-loader"]
-            }
-        ]
-    },
-    resolve: {
-        alias: paths.alias,
-        extensions: [".wasm", ".mjs", ".tsx", ".ts", ".js", ".jsx", ".json"]
-    },
-    optimization: {
-        minimizer: [
-            new UglifyJsPlugin({
-                cache: true,
-                parallel: true,
-                sourceMap: true // set to true if you want JS source maps
-            }),
-            new OptimizeCSSAssetsPlugin({})
-        ],
-        splitChunks: {
-            chunks: "async",
-            minSize: 30000,
-            maxSize: 0,
-            minChunks: 1,
-            maxAsyncRequests: 5,
-            maxInitialRequests: 3,
-            automaticNameDelimiter: "~",
-            name: true,
-            cacheGroups: {
-                vendors: {
-                    test: /[\\/]node_modules[\\/]/,
-                    priority: -10
-                },
-                styles: {
-                    name: "styles",
-                    test: /\.css$/,
-                    chunks: "all",
-                    enforce: true
-                },
-                default: {
-                    minChunks: 2,
-                    priority: -20,
-                    reuseExistingChunk: true
-                }
-            }
-        },
-        runtimeChunk: "single"
-    },
-    // Some libraries import Node modules but don't use them in the browser.
-    // Tell Webpack to provide empty mocks for them so importing them works.
-    node: {
-        module: "empty",
-        dgram: "empty",
-        dns: "mock",
-        fs: "empty",
-        net: "empty",
-        tls: "empty",
-        child_process: "empty"
-    },
-    plugins: [
-        new CleanWebpackPlugin(),
-        new MiniCssExtractPlugin({
-            // Options similar to the same options in webpackOptions.output
-            // both options are optional
-            filename: "static/css/[name].[hash].css",
-            chunkFilename: "static/css/[id].[hash].css"
-        }),
-        new HtmlWebpackPlugin({
-            title: "Hello React",
-            template: path.resolve(__dirname, "../public/index.html")
-        }),
-        new webpack.HashedModuleIdsPlugin(),
-        new ForkTsCheckerWebpackPlugin({
-            typescript: resolve.sync("typescript", {
-                basedir: paths.appNodeModules
-            }),
-            async: false,
-            checkSyntacticErrors: true,
-            tsconfig: paths.appTsConfig,
-            compilerOptions: {
-                module: "esnext",
-                moduleResolution: "node",
-                resolveJsonModule: true,
-                isolatedModules: true,
-                noEmit: true,
-                jsx: "preserve"
-            },
-            reportFiles: [
-                "**",
-                "!**/*.json",
-                "!**/__tests__/**",
-                "!**/?(*.)(spec|test).*",
-                "!**/src/setupProxy.*",
-                "!**/src/setupTests.*"
-            ],
-            watch: paths.appSrc,
-            silent: true,
-            formatter: typescriptFormatter
-        })
-    ],
-    performance: false
-};
+    err => {
+      console.log(chalk.red('Failed to compile.\n'));
+      printBuildError(err);
+      process.exit(1);
+    }
+  )
+  .catch(err => {
+    if (err && err.message) {
+      console.log(err.message);
+    }
+    process.exit(1);
+  });
+
+// Create the production build and print the deployment instructions.
+function build(previousFileSizes) {
+  // We used to support resolving modules according to `NODE_PATH`.
+  // This now has been deprecated in favor of jsconfig/tsconfig.json
+  // This lets you use absolute paths in imports inside large monorepos:
+  if (process.env.NODE_PATH) {
+    console.log(
+      chalk.yellow(
+        'Setting NODE_PATH to resolve modules absolutely has been deprecated in favor of setting baseUrl in jsconfig.json (or tsconfig.json if you are using TypeScript) and will be removed in a future major release of create-react-app.'
+      )
+    );
+    console.log();
+  }
+
+  console.log('Creating an optimized production build...');
+
+  const compiler = webpack(config);
+  return new Promise((resolve, reject) => {
+    compiler.run((err, stats) => {
+      let messages;
+      if (err) {
+        if (!err.message) {
+          return reject(err);
+        }
+        messages = formatWebpackMessages({
+          errors: [err.message],
+          warnings: [],
+        });
+      } else {
+        messages = formatWebpackMessages(
+          stats.toJson({ all: false, warnings: true, errors: true })
+        );
+      }
+      if (messages.errors.length) {
+        // Only keep the first error. Others are often indicative
+        // of the same problem, but confuse the reader with noise.
+        if (messages.errors.length > 1) {
+          messages.errors.length = 1;
+        }
+        return reject(new Error(messages.errors.join('\n\n')));
+      }
+      if (
+        process.env.CI &&
+        (typeof process.env.CI !== 'string' ||
+          process.env.CI.toLowerCase() !== 'false') &&
+        messages.warnings.length
+      ) {
+        console.log(
+          chalk.yellow(
+            '\nTreating warnings as errors because process.env.CI = true.\n' +
+              'Most CI servers set it automatically.\n'
+          )
+        );
+        return reject(new Error(messages.warnings.join('\n\n')));
+      }
+
+      return resolve({
+        stats,
+        previousFileSizes,
+        warnings: messages.warnings,
+      });
+    });
+  });
+}
+
+function copyPublicFolder() {
+  fs.copySync(paths.appPublic, paths.appBuild, {
+    dereference: true,
+    filter: file => file !== paths.appHtml,
+  });
+}

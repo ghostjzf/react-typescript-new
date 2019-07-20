@@ -10,41 +10,41 @@ const { Header } = Layout;
 
 // @ts-ignore
 class MyHeader extends Component {
-  logout = () => {
-    console.log("log out");
-  };
+    logout = () => {
+        console.log("log out");
+    };
 
-  render() {
-    const { currentUser } = Security;
+    render() {
+        const { currentUser } = Security;
 
-    const menu = (
-      <Menu>
-        <Menu.Item onClick={this.logout}>退出登录</Menu.Item>
-      </Menu>
-    );
+        const menu = (
+            <Menu>
+                <Menu.Item onClick={this.logout}>退出登录</Menu.Item>
+            </Menu>
+        );
 
-    return (
-      <Header className="app-header">
-        <Logo />
+        return (
+            <Header className="app-header">
+                <Logo />
 
-        <div className="app-header-menu">
-          <TopMenus />
-        </div>
+                <div className="app-header-menu">
+                    <TopMenus />
+                </div>
 
-        {true ? (
-          <Dropdown overlay={menu} className="app-user">
-            <div>
-              <Avatar icon="user" />
-              {currentUser}
-              <Icon type="down" />
-            </div>
-          </Dropdown>
-        ) : (
-          <a>登录</a>
-        )}
-      </Header>
-    );
-  }
+                {true ? (
+                    <Dropdown overlay={menu} className="app-user">
+                        <div>
+                            <Avatar icon="user" />
+                            {currentUser}
+                            <Icon type="down" />
+                        </div>
+                    </Dropdown>
+                ) : (
+                    <div>登录</div>
+                )}
+            </Header>
+        );
+    }
 }
 
 export default MyHeader;

@@ -7,30 +7,30 @@ import "./style.scss";
 export default Modal as INewModal;
 
 type INewModal = typeof Modal & {
-  open: (
-    config: IConfig
-  ) => IHandler & {
-    result: Promise<any>;
-    render(newContent: React.ComponentType | React.ReactElement<any>): void;
-  };
+    open: (
+        config: IConfig
+    ) => IHandler & {
+        result: Promise<any>;
+        render(newContent: React.ComponentType | React.ReactElement<any>): void;
+    };
 };
 
 interface IHandler {
-  close(data: any): void;
-  dismiss(reason: any): void;
+    close(data: any): void;
+    dismiss(reason: any): void;
 }
 
 interface IConfig extends Omit<ModalProps, "onOk" | "onCancel"> {
-  onOk?(e: React.MouseEvent<any>, handler: IHandler): void;
-  onCancel?(e: React.MouseEvent<any>, handler: IHandler): void;
-  component?: React.ComponentType | React.ReactElement<any>;
+    onOk?(e: React.MouseEvent<any>, handler: IHandler): void;
+    onCancel?(e: React.MouseEvent<any>, handler: IHandler): void;
+    component?: React.ComponentType | React.ReactElement<any>;
 }
 
 const defaultSettings = {
-  destroyOnClose: true,
-  footer: null,
-  maskClosable: false,
-  closable: false
+    destroyOnClose: true,
+    footer: null,
+    maskClosable: false,
+    closable: false
 };
 
 /**
@@ -57,99 +57,99 @@ const defaultSettings = {
  *          返回一个对象，包含了close、dismiss两个关闭方法，以及一个result的promise对象，可以通过该promise来访问modal关闭时的回调！
  */
 export const open = ((Modal as INewModal).open = (props: IConfig = {}) => {
-  let destroyed;
-  let withResolve;
-  let withReject;
+    let destroyed: any;
+    let withResolve: any;
+    let withReject: any;
 
-  const settings = { ...defaultSettings, ...props };
+    const settings = { ...defaultSettings, ...props };
 
-  if (settings.footer === true) {
-    delete settings.footer;
-  }
-
-  if (props.onOk) {
-    settings.onOk = ev => props.onOk!(ev, { close, dismiss });
-  }
-
-  if (props.onCancel) {
-    settings.onCancel = ev => props.onCancel!(ev, { close, dismiss });
-  }
-
-  const div = document.createElement("div");
-
-  document.body.appendChild(div);
-
-  function destroy() {
-    if (!destroyed) {
-      destroyed = true;
-
-      unmountComponentAtNode(div);
-
-      document.body.removeChild(div);
+    if (settings.footer === true) {
+        delete settings.footer;
     }
-  }
 
-  function close(data) {
-    render(false, () => withResolve(data));
-  }
+    if (props.onOk) {
+        settings.onOk = ev => props.onOk!(ev, { close, dismiss });
+    }
 
-  function dismiss(reason) {
-    render(false, () => withReject(reason));
-  }
+    if (props.onCancel) {
+        settings.onCancel = ev => props.onCancel!(ev, { close, dismiss });
+    }
 
-  function render(visible, callback?: () => void) {
-    const { component: TheComponent, ...props } = settings;
-    const childProps = {
-      close,
-      dismiss
+    const div = document.createElement("div");
+
+    document.body.appendChild(div);
+
+    function destroy() {
+        if (!destroyed) {
+            destroyed = true;
+
+            unmountComponentAtNode(div);
+
+            document.body.removeChild(div);
+        }
+    }
+
+    function close(data: any) {
+        render(false, () => withResolve(data));
+    }
+
+    function dismiss(reason: any) {
+        render(false, () => withReject(reason));
+    }
+
+    function render(visible: any, callback?: () => void) {
+        const { component: TheComponent, ...props } = settings;
+        const childProps = {
+            close,
+            dismiss
+        };
+
+        let children;
+
+        if (typeof TheComponent === "function") {
+            children = <TheComponent />;
+        } else {
+            children = TheComponent;
+        }
+
+        reactRender(
+            <Modal
+                // @ts-ignore
+                onCancel={dismiss}
+                // @ts-ignore
+                onOk={close}
+                {...props}
+                visible={visible}
+                afterClose={() => {
+                    if (!callback) {
+                        callback = withReject;
+                    }
+
+                    callback!();
+                    destroy();
+                }}
+            >
+                {Children.map(children, child =>
+                    cloneElement(child as React.ReactElement<any>, childProps)
+                )}
+            </Modal>,
+            div
+        );
+    }
+
+    render(true);
+
+    return {
+        close,
+        dismiss,
+        result: new Promise((resolve, reject) => {
+            withResolve = resolve;
+            withReject = reject;
+        }),
+        render(newContent) {
+            settings.component = newContent;
+
+            render(true);
+        }
     };
-
-    let children;
-
-    if (typeof TheComponent === "function") {
-      children = <TheComponent />;
-    } else {
-      children = TheComponent;
-    }
-
-    reactRender(
-      <Modal
-        // @ts-ignore
-        onCancel={dismiss}
-        // @ts-ignore
-        onOk={close}
-        {...props}
-        visible={visible}
-        afterClose={() => {
-          if (!callback) {
-            callback = withReject;
-          }
-
-          callback!();
-          destroy();
-        }}
-      >
-        {Children.map(children, child =>
-          cloneElement(child as React.ReactElement<any>, childProps)
-        )}
-      </Modal>,
-      div
-    );
-  }
-
-  render(true);
-
-  return {
-    close,
-    dismiss,
-    result: new Promise((resolve, reject) => {
-      withResolve = resolve;
-      withReject = reject;
-    }),
-    render(newContent) {
-      settings.component = newContent;
-
-      render(true);
-    }
-  };
 });

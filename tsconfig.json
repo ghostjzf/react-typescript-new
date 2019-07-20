@@ -1,34 +1,39 @@
 {
     "compilerOptions": {
         "target": "es5",
+        "lib": ["dom", "dom.iterable", "esnext"],
         "allowJs": true,
-        "checkJs": false,
-        "module": "esnext",
-        "lib": ["esnext", "dom"],
-        "sourceMap": true,
-        "jsx": "react",
-        "resolveJsonModule": true,
-        "experimentalDecorators": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "allowUnreachableCode": true,
-        "moduleResolution": "node",
         "forceConsistentCasingInFileNames": true,
-        // "noEmit": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "preserve",
+
+        "strict": false,
+        "strictPropertyInitialization": false,
+        "experimentalDecorators": true,
+        "noImplicitAny": false,
+
+        "allowUnreachableCode": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
-        "noImplicitAny": false,
         "importHelpers": true,
         "strictNullChecks": true,
         "suppressImplicitAnyIndexErrors": true,
-        "noUnusedLocals": true,
-        "baseUrl": "." /* Base directory to resolve non-absolute module names. */,
+        "noUnusedLocals": false,
+
+        "baseUrl": "src",
         "paths": {
-            "*": ["*", "src/*"],
-            "components/*": ["src/components/*"],
-            "utils/*": ["src/utils/*"],
-            "stores/*": ["src/stores/*"],
-            "modules/*": ["src/modules/*"]
+            "components": ["components"],
+            "stores": ["stores"],
+            "utils": ["utils"],
+            "modules": ["modules"]
         }
     },
-    "exclude": ["node_modules", "dist", "scripts"]
+    "include": ["src"]
 }
