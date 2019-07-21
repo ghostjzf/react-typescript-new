@@ -6,11 +6,10 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+启动本地服务.<br>
+在浏览器打开链接 [http://localhost:3000](http://localhost:3000) .
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+环境支持热替换.<br>
 
 ### `npm test`
 
