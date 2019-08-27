@@ -1,12 +1,12 @@
-import React, { Component, Children, cloneElement } from "react";
-import FormContext from "./context";
-import * as utils from "./utils";
+import React, { Component, Children, cloneElement } from 'react';
+import FormContext from './context';
+import * as utils from './utils';
 
 class Field extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ""
+      value: ''
     };
   }
 
@@ -43,8 +43,28 @@ class Field extends Component {
     }
   };
 
-  renderField = ($fieldutil, props) => {
-    let { children } = props;
+  renderField = (name, formatter) => {
+    let { children } = this.props;
+    const context = this.$formutil;
+
+    const FieldValue = name
+      ? formatter && utils.isFunction(formatter)
+        ? formatter(context.$params[name])
+        : context.$params[name]
+      : this.state.value;
+
+    const $fieldutil = Object.assign(
+      {
+        name: name,
+        onChange: this.onChange.bind(this)
+      },
+      {
+        value:
+          formatter && utils.isFunction(formatter)
+            ? formatter(FieldValue)
+            : FieldValue
+      }
+    );
 
     return Children.map(children, child =>
       child
@@ -60,8 +80,8 @@ class Field extends Component {
     const { $defaultValues } = this.$formutil;
 
     return name
-      ? value || $defaultValue || ($defaultValues && $defaultValues[name]) || ""
-      : "";
+      ? value || $defaultValue || ($defaultValues && $defaultValues[name]) || ''
+      : '';
   };
 
   componentDidMount() {
@@ -78,28 +98,9 @@ class Field extends Component {
         {context => {
           this.$formutil = context;
 
-          const FieldValue = name
-            ? formatter && utils.isFunction(formatter)
-              ? formatter(context.$params[name])
-              : context.$params[name]
-            : this.state.value;
-
-          const $fieldutil = Object.assign(
-            {
-              name: name,
-              onChange: this.onChange.bind(this)
-            },
-            {
-              value:
-                formatter && utils.isFunction(formatter)
-                  ? formatter(FieldValue)
-                  : FieldValue
-            }
-          );
-
           return (
             <div className={utils.getFieldClassName(context)}>
-              {this.renderField($fieldutil, this.props)}
+              {this.renderField(name, formatter)}
             </div>
           );
         }}
