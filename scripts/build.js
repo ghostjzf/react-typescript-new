@@ -22,7 +22,7 @@ const configFactory = require("../config/webpack.config");
 const paths = require("../config/paths");
 const checkRequiredFiles = require("react-dev-utils/checkRequiredFiles");
 const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
-const printHostingInstructions = require("react-dev-utils/printHostingInstructions");
+const printHostingInstructions = require("../config/printHostingInstructions");
 const FileSizeReporter = require("react-dev-utils/FileSizeReporter");
 const printBuildError = require("react-dev-utils/printBuildError");
 
@@ -48,7 +48,6 @@ const config = configFactory("production");
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 const { checkBrowsers } = require("react-dev-utils/browsersHelper");
-let startDate;
 checkBrowsers(paths.appPath, isInteractive)
     .then(() => {
         // First, read the current file sizes in build directory.
@@ -81,11 +80,6 @@ checkBrowsers(paths.appPath, isInteractive)
                 );
             } else {
                 console.log(chalk.green("Compiled successfully.\n"));
-                console.log();
-                console.log(
-                    "编译时间：" + (new Date().getSeconds() - startDate) + "s"
-                );
-                console.log();
             }
 
             console.log("File sizes after gzip:\n");
@@ -137,8 +131,8 @@ function build(previousFileSizes) {
         console.log();
     }
 
-    console.log("Creating an optimized production build...");
-    startDate = new Date().getSeconds();
+    console.log(chalk.cyan("--- 开始打包编译 ---"));
+    console.log();
 
     const compiler = webpack(config);
     return new Promise((resolve, reject) => {
