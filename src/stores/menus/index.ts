@@ -1,12 +1,12 @@
 export const modulePages = [
   {
-    path: "/example",
-    title: "常用工具使用示例",
+    path: '/example',
+    title: '常用工具使用示例',
     permission: null
   },
   {
-    path: "/staff",
-    title: "Form Util示例",
+    path: '/menu2',
+    title: 'Menu2',
     permission: null
   }
 ];

@@ -38,9 +38,6 @@ function printHostingInstructions(
         printStaticServerInstructions(buildFolder, useYarn);
     }
     console.log();
-    console.log("Find out more about deployment here:");
-    console.log();
-    console.log(`  ${chalk.yellow("https://bit.ly/CRA-deploy")}`);
     console.log();
 }
 
@@ -113,7 +110,7 @@ function printDeployInstructions(publicUrl, hasDeployScript, useYarn) {
 }
 
 function printStaticServerInstructions(buildFolder, useYarn) {
-    console.log("You may serve it with a static server:");
+    console.log("您可以为打包生成的目录build启动一个服务预览：");
     console.log();
 
     if (!fs.existsSync(`${globalModules}/serve`)) {
