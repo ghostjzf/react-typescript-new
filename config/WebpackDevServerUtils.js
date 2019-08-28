@@ -133,6 +133,8 @@ function createCompiler({
         if (isInteractive) {
             clearConsole();
         }
+        spinner.stop();
+        clearConsole();
         console.log("Compiling...");
     });
 
@@ -186,9 +188,7 @@ function createCompiler({
         if (useTypeScript && statsData.errors.length === 0) {
             const delayedMsg = setTimeout(() => {
                 console.log(
-                    chalk.yellow(
-                        "Files successfully emitted, waiting for typecheck results..."
-                    )
+                    chalk.yellow("文件编译成功，正在等待类型检查结果...")
                 );
             }, 100);
 
