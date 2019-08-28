@@ -14,7 +14,7 @@
 ### `npm test`
 
 以交互监视模式启动测试运行程序.<br>
-参见关于 [running tests](https://facebook.github.io/create-react-app/docs/running-tests) 可以看到更多的信息.
+参见关于 [running tests](https://facebook.github.io/create-react-app/docs/running-tests) 查看更多相关的信息.
 
 ### `npm run build`
 
@@ -24,7 +24,7 @@
 
     serve -s build
 
-**See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.**
+**参见关于 [deployment](https://facebook.github.io/create-react-app/docs/deployment) 查看更多相关的信息.**
 
 ### `npm run analyze`
 
