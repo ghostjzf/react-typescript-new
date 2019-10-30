@@ -13,12 +13,10 @@
         "isolatedModules": true,
         "noEmit": true,
         "jsx": "preserve",
-
         "strict": false,
         "strictPropertyInitialization": false,
         "experimentalDecorators": true,
         "noImplicitAny": false,
-
         "allowUnreachableCode": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,

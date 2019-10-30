@@ -1,7 +1,7 @@
-import React from "react";
-import { Layout } from "antd";
-import { Switch, Route, Redirect, RouteComponentProps } from "react-router-dom";
-import Sider from "./Sider";
+import React from 'react';
+import { Layout } from 'antd';
+import { Switch, Route, Redirect, RouteComponentProps } from 'react-router-dom';
+import Sider from './Sider';
 
 const { Content } = Layout;
 
@@ -23,9 +23,7 @@ function parseRoutes(config, allComps) {
 
       console.log(
         item.component,
-        `页面地址 ${item.path} 的路由配置中的 {componentName: "${
-          item.componentName
-        }"} 所对应的组件貌似没有导出！`
+        `页面地址 ${item.path} 的路由配置中的 {componentName: "${item.componentName}"} 所对应的组件貌似没有导出！`
       );
     }
 
@@ -87,7 +85,7 @@ function createModule(config, moduleId, loader): React.ComponentClass {
       const { url } = this.props.match;
 
       if (loading) {
-        return "loading...";
+        return 'loading...';
       }
 
       return (
