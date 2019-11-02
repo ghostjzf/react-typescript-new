@@ -1,10 +1,13 @@
-import React, { FC, cloneElement } from 'react';
+import React, { FC, cloneElement, useState } from 'react';
 import Filed, { FiledComponentProps } from './Field';
 import { Form } from 'antd';
 import { FormItemProps } from 'antd/lib/form';
 
 interface IFormItemProps extends FiledComponentProps {
-  itemProps: FormItemProps;
+  required?: boolean;
+  validMessage?: string;
+  $validators?: ($value) => boolean;
+  itemProps?: FormItemProps;
   children: any;
 }
 
@@ -13,9 +16,12 @@ const FormItem: FC<IFormItemProps | any> = ({
   itemProps,
   ...fieldProps
 }) => {
-  const childType = children.type;
+  const [$value, $setValue] = useState<any>();
+  const [$focus, $setFocus] = useState<boolean>(false);
 
   const getChildType = () => {
+    const childType = children.type;
+
     if (typeof childType === 'function') {
       return childType.name;
     }
@@ -25,28 +31,53 @@ const FormItem: FC<IFormItemProps | any> = ({
     }
   };
 
+  const childType = getChildType();
+
+  if (
+    childType === 'CheckBox' ||
+    childType === 'Radio' ||
+    childType === 'Switch'
+  ) {
+    fieldProps.valuePropName = 'checked';
+  }
+
   return (
-    <Filed {...fieldProps}>
-      {fieldProps => {
-        const childType = getChildType();
-
-        if (
-          childType === 'CheckBox' ||
-          childType === 'Radio' ||
-          childType === 'Switch'
-        ) {
-          fieldProps.defaultChecked = fieldProps.defaultValue;
-
-          delete fieldProps.defaultValue;
-        }
+    <Filed
+      $value={$value}
+      $setValue={$setValue}
+      $focus={$focus}
+      $setFocus={$setFocus}
+      {...fieldProps}
+      children={fieldHandleProps => {
+        const { _TYPE_, ...childProps } = fieldHandleProps;
 
         return (
-          <Form.Item {...itemProps}>
-            {cloneElement(children, fieldProps)}
+          <Form.Item
+            required={
+              fieldProps.required === undefined || fieldProps.required === false
+                ? false
+                : true
+            }
+            {...itemProps}
+            validateStatus={'validating'}
+            help={
+              fieldProps.required &&
+              !$value &&
+              $focus && (
+                <span style={{ color: 'red' }}>
+                  {fieldProps.validMessage || 'required'}
+                </span>
+              )
+            }
+          >
+            {cloneElement(children, {
+              onChange: childProps.onChange,
+              [_TYPE_]: $value
+            })}
           </Form.Item>
         );
       }}
-    </Filed>
+    />
   );
 };
 

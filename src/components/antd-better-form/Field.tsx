@@ -1,116 +1,41 @@
-import React, { FC, Children, cloneElement } from 'react';
+import React, { FC } from 'react';
 import FormContext from './context';
 import * as utils from './utils';
-// import { parserProps } from './fieldHelper';
+import { defaultProps, parserProps } from './fieldHelper';
 
 export interface FiledComponentProps {
-  name?: string;
-  $onChange?: (value?) => void;
+  name: string;
   $defaultValue?: any;
-  $value?: any;
+  $value: any;
+  $onChange?: (value?) => void;
   $formatter?: (value?) => string | number;
   $parser?: (value?) => string | number;
   changePropName?: string;
   valuePropName?: string;
   children: any;
+  $form: any;
 }
 
 const Field: FC<FiledComponentProps> = props => {
-  const { children } = props;
-
-  function renderField(props) {
-    return Children.map(children, child =>
-      child && utils.isValidElement(child.type)
-        ? cloneElement(child, props)
-        : child
-    );
-  }
-
-  function parserProps(props, $setParams, $setRegisters, $registers) {
-    const {
-      name,
-      $onChange,
-      $defaultValue,
-      $defaultChecked,
-      $value,
-      $formatter,
-      $parser,
-      children,
-      changePropName,
-      valuePropName,
-      ...rest
-    } = props;
-
-    const onChange = ev => {
-      const value = ev && ev.target ? ev.target.value || ev.target.checked : ev;
-      const parserValue = $parser ? $parser(value) : value;
-
-      if (name) {
-        $setParams(name, parserValue);
-        $setRegisters(name, parserValue);
-      }
-
-      if ($onChange) {
-        $onChange(parserValue);
-      }
-
-      if ($formatter) {
-        const formatValue = $formatter ? $formatter(value) : value;
-
-        renderField({ value: formatValue });
-      }
-    };
-
-    if (name) {
-      if (!$registers[name]) {
-        $setRegisters(name, $parser ? $parser($defaultValue) : $defaultValue);
-      }
-
-      if ($defaultValue) {
-        $setParams(name, $parser ? $parser($defaultValue) : $defaultValue);
-      }
-    }
-
-    if ($formatter && $defaultValue) {
-      const formatValue = $formatter($defaultValue);
-
-      Object.assign(rest, { defaultValue: formatValue });
-    } else if ($defaultValue) {
-      Object.assign(rest, { defaultValue: $defaultValue });
-    }
-
-    Object.assign(
-      rest,
-      changePropName ? { [changePropName]: onChange } : { onChange },
-      valuePropName ? { [valuePropName]: $value } : {},
-      $defaultValue ? { defaultValue: $defaultValue } : {}
-    );
-
-    return { ...rest, name };
-  }
+  const { children, name } = props;
 
   return (
     <FormContext.Consumer>
       {(context: any) => {
-        const { $setParams, $registers, $setRegisters } = context;
+        const { $registers } = context;
 
-        if (utils.isFunction(children)) {
-          return children(
-            parserProps(props, $setParams, $setRegisters, $registers)
-          );
+        if (Object.keys($registers).includes(name)) {
+          console.warn(`${name} has ever been registed!`);
         }
 
-        return Children.map(children, child =>
-          child && utils.isValidElement(child.type)
-            ? cloneElement(
-                child,
-                parserProps(props, $setParams, $setRegisters, $registers)
-              )
-            : child
-        );
+        if (utils.isFunction(children)) {
+          return parserProps(props, context);
+        }
       }}
     </FormContext.Consumer>
   );
 };
+
+Field.defaultProps = defaultProps;
 
 export default Field;

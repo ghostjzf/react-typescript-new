@@ -1,5 +1,9 @@
 import { isValidElementType } from 'react-is';
 
+export function isUndefined(arg) {
+  return typeof arg === 'undefined';
+}
+
 export function isValidElement(type) {
   return isValidElementType(type);
 }

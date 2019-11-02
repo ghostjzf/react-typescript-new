@@ -17,6 +17,8 @@ export interface FormProps {
 const Form = ({ children, ...formProps }: FormProps) => {
   const [params, setParams] = useState<any>({});
   const [registers, setRigisters] = useState<any>({});
+  const [defaultState, setDefaultState] = useState<any>({});
+  const [stateTree, setStateTree] = useState<any>({});
 
   function $setParams($name, $value) {
     setParams(Object.assign(params, { [$name]: $value }));
@@ -26,11 +28,23 @@ const Form = ({ children, ...formProps }: FormProps) => {
     setRigisters(Object.assign(registers, { [$name]: $value ? $value : null }));
   }
 
+  function $setDefaultState($name, $value) {
+    setDefaultState(Object.assign(defaultState, { [$name]: $value }));
+  }
+
+  function $setStateTree($name, $value) {
+    setStateTree(Object.assign(defaultState, { [$name]: $value }));
+  }
+
   const $form = {
     $parmas: params,
     $setParams: $setParams,
     $registers: registers,
-    $setRegisters: $setRegisters
+    $setRegisters: $setRegisters,
+    $defaultState: defaultState,
+    $setDefaultState: $setDefaultState,
+    $stateTree: stateTree,
+    $setStateTree: $setStateTree
   };
 
   function _render() {

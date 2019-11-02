@@ -36,10 +36,13 @@ const FormComp = () => {
             <>
               <FormItem
                 name="input"
+                required
+                validMessage="input is required"
+                $defaultValue={111}
+                $formatter={value => `$${value}`}
                 itemProps={{
-                  required: true,
-                  label: 'Input输入框',
-                  ...formItemLayout
+                  ...formItemLayout,
+                  label: 'Input输入框'
                 }}
               >
                 <Input />
@@ -53,6 +56,7 @@ const FormComp = () => {
               >
                 <InputNumber />
               </FormItem>
+
               <FormItem
                 name="select"
                 $defaultValue="lucy"
@@ -94,13 +98,12 @@ const FormComp = () => {
               </FormItem>
               <FormItem
                 name="isChecked"
-                $defaultValue={true}
                 itemProps={{
                   ...formItemLayout,
                   label: 'CheckBox'
                 }}
               >
-                <Checkbox defaultChecked={true}>A</Checkbox>
+                <Checkbox>A</Checkbox>
               </FormItem>
               <FormItem
                 name="isChecked2"
