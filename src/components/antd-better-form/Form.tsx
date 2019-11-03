@@ -19,6 +19,7 @@ const Form = ({ children, ...formProps }: FormProps) => {
   const [registers, setRigisters] = useState<any>({});
   const [defaultState, setDefaultState] = useState<any>({});
   const [stateTree, setStateTree] = useState<any>({});
+  const [errors, setErrors] = useState<any[]>([]);
 
   function $setParams($name, $value) {
     setParams(Object.assign(params, { [$name]: $value }));
@@ -36,6 +37,8 @@ const Form = ({ children, ...formProps }: FormProps) => {
     setStateTree(Object.assign(defaultState, { [$name]: $value }));
   }
 
+  const $invalid = false;
+
   const $form = {
     $parmas: params,
     $setParams: $setParams,
@@ -44,7 +47,9 @@ const Form = ({ children, ...formProps }: FormProps) => {
     $defaultState: defaultState,
     $setDefaultState: $setDefaultState,
     $stateTree: stateTree,
-    $setStateTree: $setStateTree
+    $setStateTree: $setStateTree,
+    $valid: true,
+    $invalid: $invalid
   };
 
   function _render() {

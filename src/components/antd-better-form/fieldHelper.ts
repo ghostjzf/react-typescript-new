@@ -31,8 +31,7 @@ export function parserProps(props, context) {
   let filedProps: any;
 
   const onChange = ev => {
-    const value =
-      ev && ev.target ? ev.target.value || ev.target.checked || null : ev;
+    const value = ev && ev.target ? ev.target[valuePropName] || undefined : ev;
     const parserValue = $parser ? $parser(value) : value;
 
     onOff = true;

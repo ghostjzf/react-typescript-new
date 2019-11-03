@@ -34,12 +34,19 @@ const FormItem: FC<IFormItemProps | any> = ({
   const childType = getChildType();
 
   if (
-    childType === 'CheckBox' ||
+    childType === 'Checkbox' ||
     childType === 'Radio' ||
     childType === 'Switch'
   ) {
     fieldProps.valuePropName = 'checked';
   }
+
+  const isRequired =
+    fieldProps.required === undefined || fieldProps.required === false
+      ? false
+      : true;
+
+  const isShowHelp = isRequired && !$value && $focus;
 
   return (
     <Filed
@@ -53,22 +60,16 @@ const FormItem: FC<IFormItemProps | any> = ({
 
         return (
           <Form.Item
-            required={
-              fieldProps.required === undefined || fieldProps.required === false
-                ? false
-                : true
-            }
-            {...itemProps}
+            required={isRequired}
             validateStatus={'validating'}
             help={
-              fieldProps.required &&
-              !$value &&
-              $focus && (
+              isShowHelp && (
                 <span style={{ color: 'red' }}>
                   {fieldProps.validMessage || 'required'}
                 </span>
               )
             }
+            {...itemProps}
           >
             {cloneElement(children, {
               onChange: childProps.onChange,
