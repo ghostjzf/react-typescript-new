@@ -18,8 +18,8 @@ const Form = ({ children, ...formProps }: FormProps) => {
   const [params, setParams] = useState<any>({});
   const [registers, setRigisters] = useState<any>({});
   const [defaultState, setDefaultState] = useState<any>({});
-  const [stateTree, setStateTree] = useState<any>({});
   const [errors, setErrors] = useState<any[]>([]);
+  const [invalid, setInvalid] = useState<boolean>(false);
 
   function $setParams($name, $value) {
     setParams(Object.assign(params, { [$name]: $value }));
@@ -33,11 +33,21 @@ const Form = ({ children, ...formProps }: FormProps) => {
     setDefaultState(Object.assign(defaultState, { [$name]: $value }));
   }
 
-  function $setStateTree($name, $value) {
-    setStateTree(Object.assign(defaultState, { [$name]: $value }));
+  function $setErrors($name, $value) {
+    setInvalid(true);
+    setErrors(Object.assign(errors, { [$name]: $value }));
   }
 
-  const $invalid = false;
+  function $removeError($name) {
+    setInvalid($checkInvalid(errors, $name));
+    setErrors(Object.assign(errors, { [$name]: null }));
+  }
+
+  function $checkInvalid(errors, $name) {
+    const errorArray = Object.entries(errors).filter(item => item[1]);
+
+    return errorArray.length === 1 && errorArray[0][0] === $name ? false : true;
+  }
 
   const $form = {
     $parmas: params,
@@ -46,10 +56,11 @@ const Form = ({ children, ...formProps }: FormProps) => {
     $setRegisters: $setRegisters,
     $defaultState: defaultState,
     $setDefaultState: $setDefaultState,
-    $stateTree: stateTree,
-    $setStateTree: $setStateTree,
-    $valid: true,
-    $invalid: $invalid
+    $valid: !invalid,
+    $invalid: invalid,
+    $setErrors: $setErrors,
+    $removeError: $removeError,
+    $errors: errors
   };
 
   function _render() {
