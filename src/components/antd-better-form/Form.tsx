@@ -26,6 +26,12 @@ const Form = ({ children, ...formProps }: FormProps) => {
   }
 
   function $setRegisters($name, $value) {
+    if (registers[$name]) {
+      console.warn(`${$name} has ever been registed!`);
+
+      return;
+    }
+
     setRigisters(Object.assign(registers, { [$name]: $value ? $value : null }));
   }
 
@@ -49,6 +55,18 @@ const Form = ({ children, ...formProps }: FormProps) => {
     return errorArray.length === 1 && errorArray[0][0] === $name ? false : true;
   }
 
+  function $reset() {
+    Object.entries(defaultState)
+      .filter(item => item[1] !== undefined)
+      .forEach(item => {
+        $setParams(item[0], item[1]);
+      });
+
+    Object.entries(defaultState).forEach(item => {
+      registers[item[0]](item[1]);
+    });
+  }
+
   const $form = {
     $parmas: params,
     $setParams: $setParams,
@@ -60,7 +78,8 @@ const Form = ({ children, ...formProps }: FormProps) => {
     $invalid: invalid,
     $setErrors: $setErrors,
     $removeError: $removeError,
-    $errors: errors
+    $errors: errors,
+    $reset: $reset
   };
 
   function _render() {

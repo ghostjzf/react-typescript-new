@@ -17,17 +17,11 @@ export interface FiledComponentProps {
 }
 
 const Field: FC<FiledComponentProps> = props => {
-  const { children, name } = props;
+  const { children } = props;
 
   return (
     <FormContext.Consumer>
       {(context: any) => {
-        const { $registers } = context;
-
-        if (Object.keys($registers).includes(name)) {
-          console.warn(`${name} has ever been registed!`);
-        }
-
         if (utils.isFunction(children)) {
           return parserProps(props, context);
         }

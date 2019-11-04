@@ -32,6 +32,8 @@ const FormComp = () => {
     <div>
       <Form layout="horizontal">
         {$form => {
+          const { $reset } = $form;
+
           const onSubmit = () => {
             console.log($form);
           };
@@ -232,7 +234,7 @@ const FormComp = () => {
                   >
                     确定
                   </Button>
-                  <Button>重置</Button>
+                  <Button onClick={$reset}>重置</Button>
                 </Col>
               </Row>
             </>

@@ -6,10 +6,15 @@ export const defaultProps = {
   $parser: value => (typeof value === 'string' ? value.trim() : value)
 };
 
-let onOff = false;
-
 export function parserProps(props, context) {
-  const { $setDefaultState, $setParams, $setErrors, $removeError } = context;
+  const {
+    $setDefaultState,
+    $setParams,
+    $setErrors,
+    $removeError,
+    $registers,
+    $setRegisters
+  } = context;
   const {
     name,
     required,
@@ -49,8 +54,6 @@ export function parserProps(props, context) {
     const parserValue = $parser ? $parser(value) : value;
     const $validResult = $getValidResult(value);
 
-    onOff = true;
-
     $setParams(name, parserValue);
     $setValue(value);
 
@@ -64,7 +67,9 @@ export function parserProps(props, context) {
     }
   };
 
-  if (!onOff) {
+  if (!$registers[name]) {
+    $setRegisters(name, $setValue);
+
     if ($defaultValue) {
       $setParams(name, $parser ? $parser($defaultValue) : $defaultValue);
 
@@ -86,19 +91,18 @@ export function parserProps(props, context) {
           : $removeError(name);
 
         Object.assign(rest, {
-          [valuePropName]: $value
+          [valuePropName]: $formatter($defaultValue)
         });
       } else {
         $setValue($defaultValue);
         $setDefaultState(name, $defaultValue);
-
         $getValidResult($defaultValue) ||
         (isRequired && $defaultValue !== undefined)
           ? $setErrors(name, $getValidResult($defaultValue) || validMessage)
           : $removeError(name);
 
         Object.assign(rest, {
-          [valuePropName]: $value
+          [valuePropName]: $defaultValue
         });
       }
     } else {
@@ -113,7 +117,7 @@ export function parserProps(props, context) {
           : $removeError(name);
 
         Object.assign(rest, {
-          [valuePropName]: $value
+          [valuePropName]: $formatter($value)
         });
       } else {
         $setDefaultState(name, $value);
