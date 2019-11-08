@@ -99,7 +99,7 @@ function printInstructions(appName, urls, useYarn, spinner) {
     }
 
     console.log();
-    spinner.start().text = chalk.cyan("项目运行中...");
+    console.log(chalk.cyan("项目运行中..."));
 }
 
 function createCompiler({
