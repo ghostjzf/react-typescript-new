@@ -2,6 +2,7 @@ import React, { FC, cloneElement, useState } from 'react';
 import Filed, { FiledComponentProps } from './Field';
 import { Form } from 'antd';
 import { FormItemProps } from 'antd/lib/form';
+import { isFunction } from './utils';
 
 interface IFormItemProps extends FiledComponentProps {
   required?: boolean;
@@ -13,6 +14,7 @@ interface IFormItemProps extends FiledComponentProps {
 
 const FormItem: FC<IFormItemProps | any> = ({
   children,
+  $validators,
   itemProps,
   ...fieldProps
 }) => {
@@ -34,12 +36,28 @@ const FormItem: FC<IFormItemProps | any> = ({
   const childType = getChildType();
 
   if (
-    childType === 'CheckBox' ||
+    childType === 'Checkbox' ||
     childType === 'Radio' ||
     childType === 'Switch'
   ) {
     fieldProps.valuePropName = 'checked';
   }
+
+  const isRequired =
+    fieldProps.required === undefined || fieldProps.required === false
+      ? false
+      : true;
+
+  const $validResult =
+    $validators && $focus
+      ? isFunction($validators)
+        ? $validators($value) === true
+          ? undefined
+          : $validators($value)
+        : console.error('$validators need a type of function')
+      : undefined;
+
+  const isShowHelp = ((isRequired && !$value) || $validResult) && $focus;
 
   return (
     <Filed
@@ -53,22 +71,16 @@ const FormItem: FC<IFormItemProps | any> = ({
 
         return (
           <Form.Item
-            required={
-              fieldProps.required === undefined || fieldProps.required === false
-                ? false
-                : true
-            }
-            {...itemProps}
+            required={isRequired}
             validateStatus={'validating'}
             help={
-              fieldProps.required &&
-              !$value &&
-              $focus && (
+              isShowHelp && (
                 <span style={{ color: 'red' }}>
-                  {fieldProps.validMessage || 'required'}
+                  {$validResult || fieldProps.validMessage || 'required'}
                 </span>
               )
             }
+            {...itemProps}
           >
             {cloneElement(children, {
               onChange: childProps.onChange,

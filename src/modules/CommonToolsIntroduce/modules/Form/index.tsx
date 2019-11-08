@@ -2,6 +2,7 @@ import React from 'react';
 import { hot } from 'react-hot-loader';
 import { Form, FormItem } from 'components/antd-better-form';
 import {
+  AutoComplete,
   Input,
   InputNumber,
   Button,
@@ -10,6 +11,7 @@ import {
   Checkbox,
   Radio,
   Select,
+  TreeSelect,
   Rate,
   Switch,
   Slider,
@@ -17,6 +19,8 @@ import {
   Col
 } from 'antd';
 import moment from 'moment';
+
+const { TreeNode } = TreeSelect;
 
 const FormComp = () => {
   const formItemLayout = {
@@ -28,12 +32,23 @@ const FormComp = () => {
     <div>
       <Form layout="horizontal">
         {$form => {
+          const { $reset } = $form;
+
           const onSubmit = () => {
             console.log($form);
           };
 
           return (
             <>
+              <FormItem
+                name="autoComplete"
+                itemProps={{
+                  ...formItemLayout,
+                  label: 'AutoComplete输入框'
+                }}
+              >
+                <AutoComplete />
+              </FormItem>
               <FormItem
                 name="input"
                 required
@@ -75,6 +90,52 @@ const FormComp = () => {
                 </Select>
               </FormItem>
               <FormItem
+                name="treeSelect"
+                itemProps={{
+                  label: 'TreeSelect下拉框',
+                  ...formItemLayout
+                }}
+              >
+                <TreeSelect
+                  multiple
+                  showSearch
+                  style={{ width: 300 }}
+                  dropdownStyle={{
+                    maxHeight: 400,
+                    overflow: 'auto'
+                  }}
+                  placeholder="Please select"
+                  allowClear
+                  treeDefaultExpandAll
+                >
+                  <TreeNode value="parent 1" title="parent 1" key="0-1">
+                    <TreeNode value="parent 1-0" title="parent 1-0" key="0-1-1">
+                      <TreeNode value="leaf1" title="my leaf" key="random" />
+                      <TreeNode value="leaf2" title="your leaf" key="random1" />
+                    </TreeNode>
+                    <TreeNode
+                      value="parent 1-1"
+                      title="parent 1-1"
+                      key="random2"
+                    >
+                      <TreeNode
+                        value="sss"
+                        title={
+                          <b
+                            style={{
+                              color: '#08c'
+                            }}
+                          >
+                            sss
+                          </b>
+                        }
+                        key="random3"
+                      />
+                    </TreeNode>
+                  </TreeNode>
+                </TreeSelect>
+              </FormItem>
+              <FormItem
                 name="date"
                 $defaultValue={moment('2019-10-13')}
                 $parser={value => moment(value).valueOf()}
@@ -98,6 +159,7 @@ const FormComp = () => {
               </FormItem>
               <FormItem
                 name="isChecked"
+                required
                 itemProps={{
                   ...formItemLayout,
                   label: 'CheckBox'
@@ -172,7 +234,7 @@ const FormComp = () => {
                   >
                     确定
                   </Button>
-                  <Button>重置</Button>
+                  <Button onClick={$reset}>重置</Button>
                 </Col>
               </Row>
             </>

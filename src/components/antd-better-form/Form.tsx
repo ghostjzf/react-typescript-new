@@ -18,13 +18,20 @@ const Form = ({ children, ...formProps }: FormProps) => {
   const [params, setParams] = useState<any>({});
   const [registers, setRigisters] = useState<any>({});
   const [defaultState, setDefaultState] = useState<any>({});
-  const [stateTree, setStateTree] = useState<any>({});
+  const [errors, setErrors] = useState<any[]>([]);
+  const [invalid, setInvalid] = useState<boolean>(false);
 
   function $setParams($name, $value) {
     setParams(Object.assign(params, { [$name]: $value }));
   }
 
   function $setRegisters($name, $value) {
+    if (registers[$name]) {
+      console.warn(`${$name} has ever been registed!`);
+
+      return;
+    }
+
     setRigisters(Object.assign(registers, { [$name]: $value ? $value : null }));
   }
 
@@ -32,8 +39,32 @@ const Form = ({ children, ...formProps }: FormProps) => {
     setDefaultState(Object.assign(defaultState, { [$name]: $value }));
   }
 
-  function $setStateTree($name, $value) {
-    setStateTree(Object.assign(defaultState, { [$name]: $value }));
+  function $setErrors($name, $value) {
+    setInvalid(true);
+    setErrors(Object.assign(errors, { [$name]: $value }));
+  }
+
+  function $removeError($name) {
+    setInvalid($checkInvalid(errors, $name));
+    setErrors(Object.assign(errors, { [$name]: null }));
+  }
+
+  function $checkInvalid(errors, $name) {
+    const errorArray = Object.entries(errors).filter(item => item[1]);
+
+    return errorArray.length === 1 && errorArray[0][0] === $name ? false : true;
+  }
+
+  function $reset() {
+    Object.entries(defaultState)
+      .filter(item => item[1] !== undefined)
+      .forEach(item => {
+        $setParams(item[0], item[1]);
+      });
+
+    Object.entries(defaultState).forEach(item => {
+      registers[item[0]](item[1]);
+    });
   }
 
   const $form = {
@@ -43,8 +74,12 @@ const Form = ({ children, ...formProps }: FormProps) => {
     $setRegisters: $setRegisters,
     $defaultState: defaultState,
     $setDefaultState: $setDefaultState,
-    $stateTree: stateTree,
-    $setStateTree: $setStateTree
+    $valid: !invalid,
+    $invalid: invalid,
+    $setErrors: $setErrors,
+    $removeError: $removeError,
+    $errors: errors,
+    $reset: $reset
   };
 
   function _render() {
