@@ -13,7 +13,8 @@ export function parserProps(props, context) {
     $setErrors,
     $removeError,
     $registers,
-    $setRegisters
+    $setRegisters,
+    $setDefaultErrors
   } = context;
   const {
     name,
@@ -54,6 +55,8 @@ export function parserProps(props, context) {
     const parserValue = $parser ? $parser(value) : value;
     const $validResult = $getValidResult(value);
 
+    console.log(ev);
+
     $setParams(name, parserValue);
     $setValue(value);
 
@@ -68,27 +71,36 @@ export function parserProps(props, context) {
   };
 
   if (!$registers[name]) {
-    $setRegisters(name, $setValue);
+    $setRegisters(name, { $setValue, $setFocus });
 
     if ($defaultValue) {
       $setParams(name, $parser ? $parser($defaultValue) : $defaultValue);
 
+      const checkRequiredNotPass =
+        isRequired &&
+        $defaultValue !== undefined &&
+        $defaultValue !== 0 &&
+        $defaultValue !== '' &&
+        $defaultValue !== false &&
+        $defaultValue !== null &&
+        !$defaultValue;
+
       if ($formatter) {
         $setValue($formatter($defaultValue));
         $setDefaultState(name, $formatter($defaultValue));
-        $getValidResult($formatter($defaultValue)) ||
-        (isRequired &&
-          $defaultValue !== undefined &&
-          $defaultValue !== 0 &&
-          $defaultValue !== '' &&
-          $defaultValue !== false &&
-          $defaultValue !== null &&
-          !$defaultValue)
-          ? $setErrors(
-              name,
-              $getValidResult($formatter($defaultValue)) || validMessage
-            )
-          : $removeError(name);
+
+        if (
+          $getValidResult($formatter($defaultValue)) ||
+          checkRequiredNotPass
+        ) {
+          const validMsg =
+            $getValidResult($formatter($defaultValue)) || validMessage;
+
+          $setErrors(name, validMsg);
+          $setDefaultErrors(name, validMsg);
+        } else {
+          $removeError(name);
+        }
 
         Object.assign(rest, {
           [valuePropName]: $formatter($defaultValue)
@@ -96,10 +108,15 @@ export function parserProps(props, context) {
       } else {
         $setValue($defaultValue);
         $setDefaultState(name, $defaultValue);
-        $getValidResult($defaultValue) ||
-        (isRequired && $defaultValue !== undefined)
-          ? $setErrors(name, $getValidResult($defaultValue) || validMessage)
-          : $removeError(name);
+
+        if ($getValidResult($defaultValue) || checkRequiredNotPass) {
+          const validMsg = $getValidResult($defaultValue) || validMessage;
+
+          $setErrors(name, validMsg);
+          $setDefaultErrors(name, validMsg);
+        } else {
+          $removeError(name);
+        }
 
         Object.assign(rest, {
           [valuePropName]: $defaultValue
@@ -109,26 +126,33 @@ export function parserProps(props, context) {
       if ($formatter) {
         $setValue($formatter($value));
         $setDefaultState(name, $formatter($value));
-        $getValidResult($formatter($value)) || isRequired
-          ? $setErrors(
-              name,
-              $getValidResult($formatter($value)) || validMessage
-            )
-          : $removeError(name);
+
+        if ($getValidResult($formatter($value)) || isRequired) {
+          const validMsg = $getValidResult($formatter($value)) || validMessage;
+
+          $setErrors(name, validMsg);
+          $setDefaultErrors(name, validMsg);
+        } else {
+          $removeError(name);
+        }
 
         Object.assign(rest, {
           [valuePropName]: $formatter($value)
         });
       } else {
         $setDefaultState(name, $value);
-        $getValidResult($value) || isRequired
-          ? $setErrors(
-              name,
-              $getValidResult($value) ||
-                validMessage ||
-                '$validators do not return a error meesage or validMessage is empty'
-            )
-          : $removeError(name);
+
+        if ($getValidResult($value) || isRequired) {
+          const validMsg =
+            $getValidResult($value) ||
+            validMessage ||
+            '$validators do not return a error meesage or validMessage is empty';
+
+          $setErrors(name, validMsg);
+          $setDefaultErrors(name, validMsg);
+        } else {
+          $removeError(name);
+        }
 
         Object.assign(rest, {
           [valuePropName]: $value

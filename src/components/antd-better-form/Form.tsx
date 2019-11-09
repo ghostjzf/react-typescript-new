@@ -18,6 +18,7 @@ const Form = ({ children, ...formProps }: FormProps) => {
   const [params, setParams] = useState<any>({});
   const [registers, setRigisters] = useState<any>({});
   const [defaultState, setDefaultState] = useState<any>({});
+  const [defaultErrors, setDefaultErrors] = useState<any[]>([]);
   const [errors, setErrors] = useState<any[]>([]);
   const [invalid, setInvalid] = useState<boolean>(false);
 
@@ -63,12 +64,46 @@ const Form = ({ children, ...formProps }: FormProps) => {
       });
 
     Object.entries(defaultState).forEach(item => {
-      registers[item[0]](item[1]);
+      registers[item[0]].$setValue(item[1]);
+      registers[item[0]].$setFocus(false);
     });
+
+    setErrors(defaultErrors);
+
+    const errorArray = Object.values(defaultErrors).filter(item => !!item);
+
+    if (errorArray.length > 0) {
+      setInvalid(true);
+    } else {
+      setInvalid(false);
+    }
+  }
+
+  function $getField($name: string) {
+    if (!registers[$name]) {
+      console.log(`${$name} is not exist`);
+
+      return;
+    }
+
+    return registers[$name];
+  }
+  function $getFirstError() {
+    const errorArray = Object.values(errors).filter(item => !!item);
+
+    if (errorArray && errorArray.length > 0) {
+      return errorArray[0];
+    }
+
+    return;
+  }
+
+  function $setDefaultErrors($name, $error) {
+    setDefaultErrors(Object.assign(defaultErrors, { [$name]: $error }));
   }
 
   const $form = {
-    $parmas: params,
+    $params: params,
     $setParams: $setParams,
     $registers: registers,
     $setRegisters: $setRegisters,
@@ -79,17 +114,33 @@ const Form = ({ children, ...formProps }: FormProps) => {
     $setErrors: $setErrors,
     $removeError: $removeError,
     $errors: errors,
-    $reset: $reset
+    $reset: $reset,
+    $getField: $getField,
+    $getFirstError: $getFirstError,
+    $setDefaultErrors: $setDefaultErrors
   };
 
   function _render() {
+    const {
+      $registers,
+      // $errors,
+      $setErrors,
+      $removeError,
+      $setRegisters,
+      $setDefaultState,
+      $defaultState,
+      $setParams,
+      ...restForm
+    } = $form;
+
     if (utils.isFunction(children)) {
-      return children($form);
+      return children(restForm);
     }
+
     return Children.map(children, child =>
       child && utils.isComponent(child.type)
         ? cloneElement(child, {
-            $form
+            $form: restForm
           })
         : child
     );

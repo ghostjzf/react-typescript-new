@@ -43,6 +43,10 @@ const FormItem: FC<IFormItemProps | any> = ({
     fieldProps.valuePropName = 'checked';
   }
 
+  if (childType === 'Transfer') {
+    fieldProps.valuePropName = 'selectedKeys';
+  }
+
   const isRequired =
     fieldProps.required === undefined || fieldProps.required === false
       ? false

@@ -5,6 +5,7 @@ import {
   AutoComplete,
   Input,
   InputNumber,
+  Cascader,
   Button,
   DatePicker,
   TimePicker,
@@ -15,8 +16,12 @@ import {
   Rate,
   Switch,
   Slider,
+  Transfer,
+  Upload,
+  Icon,
   Row,
-  Col
+  Col,
+  message
 } from 'antd';
 import moment from 'moment';
 
@@ -28,14 +33,68 @@ const FormComp = () => {
     wrapperCol: { span: 14 }
   };
 
+  const options = [
+    {
+      value: 'zhejiang',
+      label: 'Zhejiang',
+      children: [
+        {
+          value: 'hangzhou',
+          label: 'Hangzhou',
+          children: [
+            {
+              value: 'xihu',
+              label: 'West Lake'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      value: 'jiangsu',
+      label: 'Jiangsu',
+      children: [
+        {
+          value: 'nanjing',
+          label: 'Nanjing',
+          children: [
+            {
+              value: 'zhonghuamen',
+              label: 'Zhong Hua Men'
+            }
+          ]
+        }
+      ]
+    }
+  ];
+
+  let mockData: any[] = [];
+
+  for (let i = 0; i < 20; i++) {
+    mockData.push({
+      key: i.toString(),
+      title: `content${i + 1}`,
+      description: `description of content${i + 1}`,
+      disabled: i % 3 < 1
+    });
+  }
+
+  const targetKeys = mockData
+    .filter(item => +item.key % 3 > 1)
+    .map(item => item.key);
+
   return (
     <div>
       <Form layout="horizontal">
         {$form => {
-          const { $reset } = $form;
+          const { $params, $reset, $invalid, $getFirstError } = $form;
 
           const onSubmit = () => {
-            console.log($form);
+            if ($invalid) {
+              message.error($getFirstError());
+            } else {
+              console.log($params);
+            }
           };
 
           return (
@@ -54,13 +113,19 @@ const FormComp = () => {
                 required
                 validMessage="input is required"
                 $defaultValue={111}
-                $formatter={value => `$${value}`}
+                $parser={value => `$${value}`}
                 itemProps={{
                   ...formItemLayout,
                   label: 'Input输入框'
                 }}
               >
                 <Input />
+              </FormItem>
+              <FormItem
+                name="cascader"
+                itemProps={{ ...formItemLayout, label: 'Cascader' }}
+              >
+                <Cascader options={options} placeholder="Please select" />
               </FormItem>
               <FormItem
                 name="inputNumber"
@@ -214,6 +279,27 @@ const FormComp = () => {
                 }}
               >
                 <Switch />
+              </FormItem>
+              <FormItem
+                name="upload"
+                itemProps={{ ...formItemLayout, label: 'Upload' }}
+              >
+                <Upload>
+                  <Button>
+                    <Icon type="upload" /> Click to Upload
+                  </Button>
+                </Upload>
+              </FormItem>
+              <FormItem
+                name="transfer"
+                itemProps={{ ...formItemLayout, label: 'Transfer' }}
+              >
+                <Transfer
+                  dataSource={mockData}
+                  titles={['Source', 'Target']}
+                  targetKeys={targetKeys}
+                  render={item => item.title}
+                />
               </FormItem>
               <FormItem
                 name="slider"
