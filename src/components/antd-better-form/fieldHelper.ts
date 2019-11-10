@@ -55,8 +55,6 @@ export function parserProps(props, context) {
     const parserValue = $parser ? $parser(value) : value;
     const $validResult = $getValidResult(value);
 
-    console.log(ev);
-
     $setParams(name, parserValue);
     $setValue(value);
 
@@ -70,7 +68,7 @@ export function parserProps(props, context) {
     }
   };
 
-  if (!$registers[name]) {
+  if (!$registers[name] && !!valuePropName) {
     $setRegisters(name, { $setValue, $setFocus });
 
     if ($defaultValue) {

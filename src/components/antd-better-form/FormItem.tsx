@@ -47,6 +47,10 @@ const FormItem: FC<IFormItemProps | any> = ({
     fieldProps.valuePropName = 'selectedKeys';
   }
 
+  if (childType === 'Upload') {
+    fieldProps.valuePropName = null;
+  }
+
   const isRequired =
     fieldProps.required === undefined || fieldProps.required === false
       ? false
@@ -76,7 +80,7 @@ const FormItem: FC<IFormItemProps | any> = ({
         return (
           <Form.Item
             required={isRequired}
-            validateStatus={'validating'}
+            validateStatus={$focus && isShowHelp ? 'error' : undefined}
             help={
               isShowHelp && (
                 <span style={{ color: 'red' }}>
